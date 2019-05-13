@@ -1,29 +1,35 @@
-<script src="js/bbcode.js"></script><?php
-/*
-##########################################################################
-#                                                                        #
-#           Version 4       /                        /   /               #
-#          -----------__---/__---__------__----__---/---/-               #
-#           | /| /  /___) /   ) (_ `   /   ) /___) /   /                 #
-#          _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___               #
-#                       Free Content / Management System                 #
-#                                   /                                    #
-#                                                                        #
-#                                                                        #
-#   Copyright 2005-2015 by webspell.org                                  #
-#                                                                        #
-#   visit webSPELL.org, webspell.info to get webSPELL for free           #
-#   - Script runs under the GNU GENERAL PUBLIC LICENSE                   #
-#   - It's NOT allowed to remove this copyright-tag                      #
-#   -- http://www.fsf.org/licensing/licenses/gpl.html                    #
-#                                                                        #
-#   Code based on WebSPELL Clanpackage (Michael Gruber - webspell.at),   #
-#   Far Development by Development Team - webspell.org                   #
-#                                                                        #
-#   visit webspell.org                                                   #
-#                                                                        #
-##########################################################################
-*/
+<script src="js/bbcode.js"></script>
+<script src="../includes/plugins/news/js/news.js"></script>
+<?php
+/*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
+| _    _  ___  ___  ___  ___  ___  __    __      ___   __  __       |
+|( \/\/ )(  _)(  ,)/ __)(  ,\(  _)(  )  (  )    (  ,) (  \/  )      |
+| \    /  ) _) ) ,\\__ \ ) _/ ) _) )(__  )(__    )  \  )    (       |
+|  \/\/  (___)(___/(___/(_)  (___)(____)(____)  (_)\_)(_/\/\_)      |
+|                       ___          ___                            |
+|                      |__ \        / _ \                           |
+|                         ) |      | | | |                          |
+|                        / /       | | | |                          |
+|                       / /_   _   | |_| |                          |
+|                      |____| (_)   \___/                           |
+\___________________________________________________________________/
+/                                                                   \
+|        Copyright 2005-2018 by webspell.org / webspell.info        |
+|        Copyright 2018-2019 by webspell-rm.de                      |
+|                                                                   |
+|        - Script runs under the GNU GENERAL PUBLIC LICENCE         |
+|        - It's NOT allowed to remove this copyright-tag            |
+|        - http://www.fsf.org/licensing/licenses/gpl.html           |
+|                                                                   |
+|               Code based on WebSPELL Clanpackage                  |
+|                 (Michael Gruber - webspell.at)                    |
+\___________________________________________________________________/
+/                                                                   \
+|                     WEBSPELL RM Version 2.0                       |
+|           For Support, Mods and the Full Script visit             |
+|                       webspell-rm.de                              |
+\__________________________________________________________________*/
+# Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
 $_lang = $pm->plugin_language("admin_news", $plugin_path);
 
@@ -309,31 +315,54 @@ $CAPCLASS = new \webspell\Captcha;
 
     $id = mysqli_insert_id($_database);
 
-    $screen = new \webspell\HttpUpload('screen');
 
-    if ($screen->hasFile()) {
-        if ($screen->hasError() === false) {
-            $file = $id . '_' . time() . "." .$screen->getExtension();
-            $new_name = $filepath . $file;
-            if ($screen->saveAs($new_name)) {
-                @chmod($new_name, $new_chmod);
-                $ergebnis = safe_query("SELECT screens FROM " . PREFIX . "plugins_news WHERE newsID='" . $id ."'");
-                $dx = mysqli_fetch_array($ergebnis);
-                $screens = explode('|', $dx[ 'screens' ]);
-                $screens[ ] = $file;
-                $screens_string = implode('|', $screens);
-
-                $ergebnis = safe_query(
-                    "UPDATE
-                    " . PREFIX . "plugins_news
-                    SET
-                        screens='" . $screens_string . "'
-                    
-                WHERE `newsID` = '" . $id . "'"
-                );
+        $upload = new \webspell\HttpUpload('screen');
+        if ($upload->hasFile()) {
+            if ($upload->hasError() === false) {
+                $mime_types = array('image/jpeg','image/png','image/gif');
+ 
+                if ($upload->supportedMimeType($mime_types)) {
+                    $imageInformation =  getimagesize($upload->getTempFile());
+ 
+                    if (is_array($imageInformation)) {
+                        switch ($imageInformation[ 2 ]) {
+                            case 1:
+                                $endung = '.gif';
+                                break;
+                            case 3:
+                                $endung = '.png';
+                                break;
+                            default:
+                                $endung = '.jpg';
+                                break;
+                        }
+                        $file = $id.$endung;
+ 
+                        if ($upload->saveAs($filepath.$file, true)) {
+                            @chmod($file, $new_chmod);
+                            safe_query(
+                                "UPDATE " . PREFIX . "plugins_news SET screens='" . $file . "' WHERE newsID='" . $id . "'"
+                            );
+                        }
+                    } else {
+                        $errors[] = $plugin_language[ 'broken_image' ];
+                    }
+                } else {
+                    $errors[] = $plugin_language[ 'unsupported_image_type' ];
+                }
+            } else {
+                $errors[] = $upload->translateError();
             }
         }
-    }
+
+
+
+
+
+
+
+
+
 
     $rubrics = '';
     $newsrubrics = safe_query("SELECT rubricID, rubric FROM " . PREFIX . "plugins_news_rubrics ORDER BY rubric");
@@ -411,52 +440,22 @@ echo'    <form class="form-horizontal" method="post" id="post" name="post" actio
 
 <!-- ================================ screen Anfang======================================================== -->
 
-<div class="form-group">
+
+
+  <div class="form-group">
     <label class="col-sm-2 control-label">'.$_lang['banner'].':</label>
-    <div class="col-sm-2"><span class="text-muted small"><em>
-      <input class="btn btn-default" type="file" name="screen"> <small>(max. 1000x500)</small>
-        </em></span>
-        
-    </div><div class="col-sm-1"></div>
+    <div class="col-sm-3">
+      <input name="screen" class="btn btn-info" type="file" id="imgInp" size="40" /> 
+      <small>(max. 1000x500)</small>
+    </div>
+    <div class="col-sm-2">
+      <img id="img-upload" src="../includes/plugins/clanwars/images/no-image.jpg" height="150px"/>
+    </div>
   </div>
 ';
-            
+ 
 
-    $screens = array();
-    if (!empty($dg[ 'screens' ])) {
-        $screens = explode("|", $dg[ 'screens' ]);
-    }
-    if (is_array($screens)) {
-        foreach ($screens as $screen) {
-            if ($screen != "") {   
-
-echo'
-
-<div class="form-group">
-<label class="col-sm-2 control-label">'.$_lang['current_banner'].':</label>
-    <div class="col-sm-1">
-    <a href="../' . $filepath . $screens . '" target="_blank"><img class="img-responsive" style="width: 100px" src="../' . $filepath . $screens . '" alt="" /></a>
-</div><div class="col-sm-9">' . $screens . '<br>
-<input type="text" name="addpic" size="100"
-                value="&lt;img src=&quot;../' . $filepath . $screens . '&quot; border=&quot;0&quot; align=&quot;left&quot; style=&quot;width:200px;padding:4px;&quot; alt=&quot;&quot; /&gt;">
-
-                <!--<input class="btn btn-success" type="button" onclick="AddCodeFromWindow(\'[img]' . $filepath . $dg[ 'screens' ] . '[/img] \')"
-                    value="' . $_lang[ 'add_to_message' ] . '">-->
-
-                <input class="btn btn-danger" type="button" onclick="MM_confirm(\''.$_lang['really_delete'].'\', \'admincenter.php?site=admin_news&amp;action=picdelete&amp;$newsID=' . $newsID . '&amp;file=' . basename($dg[ 'screens' ]) . '&amp;captcha_hash='.$hash.'\')" value="'.$_lang['delete'].'" />
-
-
-                
-                </div>
-    </div>
-
-
-<hr>
-';
-            }
-        }
-    }
-
+echo'<hr>';
 echo '
 <!-- =============================  screen Ende =========================================================== -->
 
@@ -496,11 +495,10 @@ echo '
   </div>
 <div class="form-group">
    <label class="col-sm-2 control-label">'.$_lang['text'].':</label>
-    <div class="col-sm-8"><span class="text-muted small"><em>
-      <textarea class="form-control" id="message" name="message" rows="10" cols=""></textarea></em></span>
+    <div class="col-sm-8">
+      <textarea name="message" id="ckeditor" cols="30" rows="15" class="ckeditor"></textarea>
     </div>
   </div>
-
   <div class="form-group">
     <label class="col-sm-2 control-label">'.$_lang['is_displayed'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
@@ -623,10 +621,14 @@ if ($ds[ 'displayed' ] == 1) {
 <div class="form-group">
     <label class="col-sm-2 control-label">'.$_lang['banner'].':</label>
     <div class="col-sm-2"><span class="text-muted small"><em>
-      <input class="btn btn-default" type="file" name="screen"> <small>(max. 1000x500)</small>
+      <input class="btn btn-default" type="file" id="imgInp" name="screen"> <small>(max. 1000x500)</small>
         </em></span>
         
     </div><div class="col-sm-1"></div>
+        <div class="col-sm-2">
+      <img id="img-upload" src="../includes/plugins/news/images/news-pic/no-image.jpg" height="150px"/>
+    </div>
+
     <div class="col-sm-2"><input class="btn btn-success" type="submit" name="submit" value="' . $_lang[ 'upload' ] . '"></div>
   </div>
 ';
@@ -647,10 +649,10 @@ echo'
 <div class="form-group">
 <label class="col-sm-2 control-label">'.$_lang['current_banner'].':</label>
     <div class="col-sm-1">
-    <a href="../' . $filepath . $screen . '" target="_blank"><img class="img-responsive" style="width: 100px" src="../' . $filepath . $screen . '" alt="" /></a>
+    <a href="../' . $filepath . $screen . '" target="_blank"><img class="img-responsive" style="height="150px" src="../' . $filepath . $screen . '" alt="" /></a>
 </div><div class="col-sm-9">' . $screen . '<br>
 <input type="text" name="pic" size="100"
-                value="&lt;img src=&quot;../' . $filepath . $screen . '&quot; border=&quot;0&quot; align=&quot;left&quot; style=&quot;width:200px;padding:4px;&quot; alt=&quot;&quot; /&gt;">
+                value="../' . $filepath . $screen . '">
 
                 <!--<input class="btn btn-success" type="button" onclick="AddCodeFromWindow(\'[img]' . $filepath . $db[ 'screens' ] . '[/img] \')"
                     value="' . $_lang[ 'add_to_message' ] . '">-->
@@ -716,9 +718,7 @@ echo '
   <div class="form-group">
     <label class="col-sm-2 control-label">'.$_lang['text'].':</label>
     <div class="col-sm-8">
-      
-       <textarea class="form-control" type="text" id="message" name="message" rows="10" cols="" style="width: 100%;">' . getinput($ds[ 'content' ]) .
-        '</textarea>
+       <textarea name="message" id="ckeditor" cols="30" rows="15" class="ckeditor">'. getinput($ds[ 'content' ]) .' </textarea>
     </div>
   </div>
 
@@ -908,12 +908,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news` ORDER BY `date`");
             $displayed = '<font color="green"><b>' . $_lang[ 'yes' ] . '</b></font>' :
             $displayed = '<font color="red"><b>' . $_lang[ 'no' ] . '</b></font>';
             
-        $headline = $db[ 'headline' ];
-        $translate = new multiLanguage(detectCurrentLanguage());    
-        $translate->detectLanguages($headline);
-        $headline = $translate->getTextByLanguage($headline);    
-        $headline = toggle(htmloutput($headline), 1);
-        $headline = toggle($headline, 1);      
+            
 
         echo '<tr>
         <td>'.$date.'</td>

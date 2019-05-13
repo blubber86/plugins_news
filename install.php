@@ -24,7 +24,7 @@ $navi_link		=	"news";					 					// navi link file (index.php?site=...)
 $dashnavi_link	=	"admincenter.php?site=admin_news"; 			// dashboard_navigation link file
 
 #@info:	settings
-$modulname2	 	= 	"news_categories"; 							// name to uninstall
+$modulname2	 	= 	"news_rubrics"; 							// name to uninstall
 $plugin_table2 	= 	"categorys"; 								// name of the mysql table
 $str2			=	"News Kategorien"; 							// name of the plugin
 $navi_name2		=	"{[de]}News Archive{[en]}News  Archive";	// name of the Navi
@@ -59,7 +59,9 @@ $navi_link3		=	"news_comments";					 		// navi link file (index.php?site=...)
 $dashnavi_link3	=	""; 										// dashboard_navigation link file
 
 $modulname4	 	= 	"news_archive"; 							// name to uninstall
-
+$navi_link4		=	"news_archive"; 							// navi link file (index.php?site=...)
+$modulname5	 	= 	"news_comments"; 							// name to uninstall
+$navi_link5		=	"news_comments";					 		// navi link file (index.php?site=...)
 
 
 #@info: database
@@ -128,7 +130,7 @@ $add_navigation1 = "INSERT INTO `".PREFIX."navigation_website_sub` (`mnavID`, `n
 					VALUES ('1','$navi_name', '$modulname', 'index.php?site=$navi_link', '1', '1');";
 
 $add_navigation2 = "INSERT INTO `".PREFIX."navigation_website_sub` (`mnavID`, `name`, `modulname`, `url`, `sort`, `indropdown`) 
-					VALUES ('1','$navi_name2', '$modulname2', 'index.php?site=$navi_link2', '1', '1');";
+					VALUES ('1','$navi_name2', '$modulname4', 'index.php?site=$navi_link4', '1', '1');";
 
 $add_dashboard_navigation = "INSERT INTO `".PREFIX."navigation_dashboard_links` (`catID`, `name`, `modulname`, `url`, `accesslevel`, `sort`) 
 					VALUES ('6','$navi_name', '$modulname', '$dashnavi_link', 'user', '1')";	
@@ -137,10 +139,10 @@ $add_module1 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, 
 				VALUES ('$plugin_table', '$modulname', '0', '0', '1', '0', '1');";
 
 $add_module2 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `le_activated`, `re_activated`, `activated`, `deactivated`, `sort`) 
-				VALUES ('$navi_link2', '$modulname2', '0', '0', '1', '0', '1');";
+				VALUES ('$navi_link2', '$modulname4', '0', '0', '1', '0', '1');";
 
 $add_module3 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `le_activated`, `re_activated`, `activated`, `deactivated`, `sort`) 
-				VALUES ('$navi_link3', '$modulname4', '0', '0', '1', '0', '1');";
+				VALUES ('$navi_link3', '$modulname5', '0', '0', '1', '0', '1');";
 
 #$add_comments = "INSERT INTO `".PREFIX."comments_settings` (`ident`, `modul`, `id`, `parent`) VALUES ('vi', 'news', 'vidID', 'comments')";
 	

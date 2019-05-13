@@ -1,30 +1,33 @@
 <?php
-/*
-##########################################################################
-#                                                                        #
-#           Version 4       /                        /   /               #
-#          -----------__---/__---__------__----__---/---/-               #
-#           | /| /  /___) /   ) (_ `   /   ) /___) /   /                 #
-#          _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___               #
-#                       Free Content / Management System                 #
-#                                   /                                    #
-#                                                                        #
-#                                                                        #
-#   Copyright 2005-2015 by webspell.org                                  #
-#                                                                        #
-#   visit webSPELL.org, webspell.info to get webSPELL for free           #
-#   - Script runs under the GNU GENERAL PUBLIC LICENSE                   #
-#   - It's NOT allowed to remove this copyright-tag                      #
-#   -- http://www.fsf.org/licensing/licenses/gpl.html                    #
-#                                                                        #
-#   Code based on WebSPELL Clanpackage (Michael Gruber - webspell.at),   #
-#   Far Development by Development Team - webspell.org                   #
-#                                                                        #
-#   visit webspell.org                                                   #
-#                                                                        #
-##########################################################################
-*/
-
+/*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
+| _    _  ___  ___  ___  ___  ___  __    __      ___   __  __       |
+|( \/\/ )(  _)(  ,)/ __)(  ,\(  _)(  )  (  )    (  ,) (  \/  )      |
+| \    /  ) _) ) ,\\__ \ ) _/ ) _) )(__  )(__    )  \  )    (       |
+|  \/\/  (___)(___/(___/(_)  (___)(____)(____)  (_)\_)(_/\/\_)      |
+|                       ___          ___                            |
+|                      |__ \        / _ \                           |
+|                         ) |      | | | |                          |
+|                        / /       | | | |                          |
+|                       / /_   _   | |_| |                          |
+|                      |____| (_)   \___/                           |
+\___________________________________________________________________/
+/                                                                   \
+|        Copyright 2005-2018 by webspell.org / webspell.info        |
+|        Copyright 2018-2019 by webspell-rm.de                      |
+|                                                                   |
+|        - Script runs under the GNU GENERAL PUBLIC LICENCE         |
+|        - It's NOT allowed to remove this copyright-tag            |
+|        - http://www.fsf.org/licensing/licenses/gpl.html           |
+|                                                                   |
+|               Code based on WebSPELL Clanpackage                  |
+|                 (Michael Gruber - webspell.at)                    |
+\___________________________________________________________________/
+/                                                                   \
+|                     WEBSPELL RM Version 2.0                       |
+|           For Support, Mods and the Full Script visit             |
+|                       webspell-rm.de                              |
+\__________________________________________________________________*/
+# Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
 $_lang = $pm->plugin_language("news", $plugin_path);
 
@@ -41,7 +44,7 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
   $gesamt = mysqli_num_rows($alle);
   $pages=1;
 
-  
+  #=========
   $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dn = mysqli_fetch_array($settings);
 
@@ -51,6 +54,10 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
         $max = 10;
         }
  
+        
+  #=========      
+
+  #$max='1';
 
   for ($n=$max; $n<=$gesamt; $n+=$max) {
     if($gesamt>$n) $pages++;
@@ -71,10 +78,13 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
 
 
 
-$ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ");
+
+$ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
     
    $n=1;
 
+        #while ($db = mysqli_fetch_array($ergebnis)) { 
+       #$n = 1; 
         while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
         $time = getformattime($ds[ 'date' ]);
@@ -87,21 +97,53 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         if (!file_exists($rubricpic) || $rubricpic_name == '') {
             $rubricpic = '';
         } else {
-            $rubricpic = '<img src="' . $rubricpic . '" alt="" class="img-fluid">';
+            $rubricpic = '<img align="left" src="' . $rubricpic . '" alt="" class="img-responsive">';
             
         }
 
-        
+        /*if ($ds[ 'comments' ]) {
+           $anzcomments = getanzcomments($ds[ 'newsID' ], 'ne');
+                $replace = array('$anzcomments', '$url', '$lastposter', '$lastdate');
+                $vars = array(
+                    $anzcomments,
+                    'index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ],
+                    clearfromtags(html_entity_decode(getlastcommentposter($ds[ 'newsID' ], 'ne'))),
+                    getformatdatetime(getlastcommentdate($ds[ 'newsID' ], 'ne'))
+                );
+
+                switch ($anzcomments) {
+                    case 0:
+                        $comments = str_replace($replace, $vars, $plugin_language[ 'no_comment' ]);
+                        break;
+                    case 1:
+                        $comments = str_replace($replace, $vars, $plugin_language[ 'comment' ]);
+                        break;
+                    default:
+                        $comments = str_replace($replace, $vars, $plugin_language[ 'comments' ]);
+                        break;
+                }
+           
+        } else {
+            $comments = '';
+        }*/
+
+        #$n = 1;
         
         $content = htmloutput($ds['content']);
         $headline = cleartext($ds['headline']);
         
 
+        $content = htmloutput($content);
+        $content = toggle($content, $ds[ 'newsID' ]);
         $headline = clearfromtags($headline);
-        
+        #$comments = '';
+
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
+        #$line = '<a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '">
+        #    <strong>' . $headline . '</strong>
+        #</a>';
         $line = '<strong style="color: #fe821d">' . $headline . '</strong> ';
 
         $related = "";
@@ -123,7 +165,15 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
             $related = "n/a";
         } 
 
- 
+ /*       $set = safe_query("SELECT * FROM " . PREFIX . "plugins_news_rubrics WHERE (displayed = '1')");
+        if (mysqli_num_rows($set)) {
+    while ($da = mysqli_fetch_array($set)) {
+
+
+        $data_array = array();
+        $data_array['$rubric_pic'] = $rubricpic;
+}}
+*/
         $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dx = mysqli_fetch_array($settings);
 
@@ -140,11 +190,20 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
 
    
 
+        #$content = nl2br(strip_tags(htmloutput($content)));
+        $translate = new multiLanguage(detectCurrentLanguage());
+        $translate->detectLanguages($content);
+        $content = $translate->getTextByLanguage($content);
+
         if (mb_strlen($content) > $maxnewschars) {
         $content = mb_substr($content, 0, $maxnewschars);
         $content .= '<b class="text-primary">[...]</b><br><a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '" class="btn btn-primary">READMORE</a>';
         }
-   
+
+    
+
+        #$tags = \webspell\Tags::getTagsLinked('news', $newsID);
+
         $data_array = array();
         $data_array['$related'] = $related;
         $data_array['$headline'] = $headline;
@@ -154,6 +213,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         $data_array['$content'] = $content;
         $data_array['$poster'] = $poster;
         $data_array['$date'] = $date;
+        #$data_array['$comments'] = $comments;
         
         $css = '<link href="'.$plugin_path.'css/news.css" rel="stylesheet">';
         $news = $GLOBALS["_template"]->loadTemplate("news","content_area", $data_array, $plugin_path);

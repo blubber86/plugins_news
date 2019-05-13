@@ -1,171 +1,143 @@
 <!-- news_head -->
+
 <h2><span><i class="fa fa-newspaper-o"></i>&nbsp;$title</span></h2>
-<!-- END -->
+
+<!-- END --> 
+
 <!-- news_content_area -->
- <article>
-   <div class="card">
-    <div class="card-body">
-        <h3>$line<span style="font-size: 10px">$rubrikname</small>
-           </span></h3>
-    
-    
-    
-    
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-    <td align="left" valign="top"></td>
-  </tr>
-  </table>
-    <section>
-       $rubric_pic<br><br><br><br>
-        <table width="100%" border="0" cellspacing="0" cellpadding="0">
-      <tr>
-        <td valign="top" align="justify">$content</td>
-      </tr>
-      
-    </table>
-            
-        
-    </section>
 
-    
-           Links: $related
-       <hr class="small">     
-        
-            <i class="fa fa-user"></i> by $poster
-            | <i class="fa fa-calendar"></i> $date
-            <!--| <i class="fa fa-comment"></i> $comments -->
-    
-  </div>
- </div>  
-</article>
-<br>
+<div class="card card-body mb-2">
+ <div class="row">
+  <div class="col-md-12"> <strong class="d-inline-block mb-2 text-secondary">$rubrikname</strong>
+   <h3 class="mb-0 text-primary">$line</h3>
+      <div class="mb-1 text-muted">$date</div>
+      <div class="float-right img-responsive ml-4 mb-4">$rubric_pic</div>
+      <div class="card-text mb-auto">$content</div>
+     </div>
+    <div class="col-md-12">Links: $related<hr class="small"><i class="fa fa-user"></i> by $poster</div>
+ </div>
+</div>
 
-<!-- END -->
-
-
-
+<!-- END --> 
 
 <!-- news_headlines -->
-<li data-toggle="tooltip" title="$date - $time">
-    <a href="index.php?site=news_comments&amp;newsID=$news_id&amp;lang=$lang">$headlines</a>
-</li>
-<!-- END -->
 
+<li data-toggle="tooltip" title="$date - $time"> <a href="index.php?site=news_comments&amp;newsID=$news_id&amp;lang=$lang">$headlines</a> </li>
 
-
-
-
-
-
+<!-- END --> 
 
 <!-- news_category -->
+
 <table class="table table-striped">
-        
-        <thead>
-            <tr>
-                <th><h3>$title_categories ($anzcats $categories)</h3></th>
-            </tr>
-            <tr>
-                <th>$category</th>
-                <th>$links</th>
-            </tr>
-        </thead>
-        <tbody>
-<!-- END -->
-<!-- news_content -->
-<tr>
-    <td>$linkcatname</td>
-    <td>$anzlinks</td>
-</tr>
-<!-- END -->
+ <thead>
+  <tr>
+   <th>
+    <h3>$title_categories ($anzcats $categories)</h3>
+   </th>
+  </tr>
+  <tr>
+   <th>$category</th>
+   <th>$links</th>
+  </tr>
+ </thead>
+ <tbody>
+  
+  <!-- END --> 
+  
+  <!-- news_content -->
+  
+  <tr>
+   <td>$linkcatname</td>
+   <td>$anzlinks</td>
+  </tr>
+  
+  <!-- END --> 
+  
+  <!-- news_foot -->
+  
+ </tbody>
+</table>
 
-<!-- news_foot -->
-        </tbody>
-    </table>
-
-
-<!-- END -->
+<!-- END --> 
 
 <!-- news_details_head -->
+
 <ol class="breadcrumb">
-    <li><a href="index.php?site=links">$title_categories</a></li>
-    <li>$linkcatname</li>
+ <li><a href="index.php?site=links">$title_categories</a></li>
+ <li>$linkcatname</li>
 </ol>
-<!-- END -->
+
+<!-- END --> 
+
 <!-- news_details_header -->
+
 <div class="row">
-<div class="col-md-12">
-<!-- END -->
-<!-- news_details -->
-<div class="col-md-6">
-<div class="panel panel-default">
+ <div class="col-md-12"> 
+  
+  <!-- END --> 
+  
+  <!-- news_details -->
+  
+  <div class="col-md-6">
+   <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">$name</h3>
+     <h3 class="panel-title">$name</h3>
     </div>
-    <div class="panel-body">
-        $banner
-        <br>
-        <div class="well">
-            $info<br>
-            <br>
-            <strong>$links:</strong> $link
-        </div>
-       
+    <div class="panel-body"> $banner <br>
+     <div class="well"> $info<br>
+      <br>
+      <strong>$links:</strong> $link </div>
     </div>
+   </div>
+  </div>
+  
+  <!-- END --> 
+  
+  <!-- news_details_foot --> 
+  
+ </div>
 </div>
-</div>
-<!-- END -->
-<!-- news_details_foot -->
-</div></div>
-<!-- END -->
 
-
+<!-- END --> 
 
 <!-- news_admin_details_head -->
+
 <div class="panel panel-default">
-            <div class="panel-heading">
-                            <i class="fa fa-globe"></i> $title_categories</a> &raquo; $linkcatname</div>
-                        <div class="panel-body">
+ <div class="panel-heading"> <i class="fa fa-globe"></i> $title_categories</a> &raquo; $linkcatname</div>
+ <div class="panel-body">
+  <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_links" class="white">$title</a> &raquo; New / Edit</div>
+  <div class="col-md-2 form-group"></div>
+  
+  <!-- END --> 
+  
+  <!-- news_admin_details_header -->
+  
+  <table class="table table-striped">
+   <thead>
+   <th><b>$linkname</b></th>
+    <th><b>$homepage</b></th>
+    <th class="hidden-xs hidden-sm"><b>$information</b></th>
+    <th><b>$actions</b></th>
+    
+     </thead>
+    
+    <!-- END --> 
+    
+    <!-- news_admin_details -->
+    
+   <tr>
+    <td class="' . $td . '">$name</td>
+    <td class="' . $td . '">$banner</td>
+    <td class="' . $td . '">$info</td>
+    <td class="' . $td . '">$adminaction</td>
+   </tr>
+   
+   <!-- END --> 
+   
+   <!-- news_admin_details_foot -->
+   
+  </table>
+ </div>
+</div>
 
-<div class="col-md-10 form-group"><a href="admincenter.php?site=admin_links" class="white">$title</a> &raquo; New / Edit</div>
-<div class="col-md-2 form-group"></div>
-
-<!-- END -->
-<!-- news_admin_details_header -->
-
-
-<table class="table table-striped">
-    <thead>
-      <th><b>$linkname</b></th>
-      <th><b>$homepage</b></th>
-      <th class="hidden-xs hidden-sm"><b>$information</b></th>
-      <th><b>$actions</b></th>
-      
-    </thead>
-
-
-<!-- END -->
-
-
-
-
-
-
-<!-- news_admin_details -->
-
-
-<tr>
-           <td class="' . $td . '">$name</td>
-           <td class="' . $td . '">$banner</td>
-           <td class="' . $td . '">$info</td>
-           <td class="' . $td . '">$adminaction</td>
-
-</tr>
-<!-- END -->
-
-<!-- news_admin_details_foot -->
-
-</table>
-</div></div>
 <!-- END -->

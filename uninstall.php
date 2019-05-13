@@ -2,15 +2,16 @@
 $name = "news";
 // Name Tabelle | Where Klause | ID name
 DeleteData("plugins","modulname",$name);
-DeleteData("plugins","modulname","".$name."_categories");
-DeleteData("plugins","modulname","".$name."_settings");
-DeleteData("plugins","modulname","".$name."_archive");
+DeleteData("plugins","modulname","news_rubrics");
+DeleteData("plugins","modulname","news_settings");
 DeleteData("settings_moduls","modulname",$name);
-DeleteData("settings_moduls","modulname","".$name."_categories");
-DeleteData("settings_moduls","modulname","".$name."_archive");
+DeleteData("settings_moduls","modulname","news_archive");
+DeleteData("settings_moduls","modulname","news_comments");
 DeleteData("navigation_dashboard_links","modulname",$name);
 DeleteData("navigation_website_sub","modulname",$name);
-DeleteData("navigation_website_sub","modulname","".$name."_categories");
+DeleteData("navigation_website_sub","modulname","news_archive");
 DeleteData("plugins_widgets","modulname",$name);
-safe_query("DROP TABLE IF EXISTS " . PREFIX . "plugins_".$name.", " . PREFIX . "plugins_".$name."_rubrics, " . PREFIX . "plugins_".$name."_settings");
+safe_query("DROP TABLE IF EXISTS " . PREFIX . "plugins_".$name."");
+safe_query("DROP TABLE IF EXISTS " . PREFIX . "plugins_news_rubrics");
+safe_query("DROP TABLE IF EXISTS " . PREFIX . "plugins_news_settings");
 ?>
