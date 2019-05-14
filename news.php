@@ -83,8 +83,6 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
     
    $n=1;
 
-        #while ($db = mysqli_fetch_array($ergebnis)) { 
-       #$n = 1; 
         while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
         $time = getformattime($ds[ 'date' ]);
@@ -130,22 +128,15 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         #$n = 1;
         
         $content = htmloutput($ds['content']);
-        $headline = cleartext($ds['headline']);
-        
+        $headline = htmloutput($ds['headline']);
 
         $content = htmloutput($content);
         $content = toggle($content, $ds[ 'newsID' ]);
-        $headline = clearfromtags($headline);
-        #$comments = '';
-
+        
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
-        #$line = '<a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '">
-        #    <strong>' . $headline . '</strong>
-        #</a>';
-        $line = '<strong style="color: #fe821d">' . $headline . '</strong> ';
-
+        
         $related = "";
         if ($ds[ 'link1' ] && $ds[ 'url1' ] != "http://" && $ds[ 'window1' ]) {
             $related .= '<i class="fa fa-link"></i> <a href="' . $ds[ 'url1' ] . '" target="_blank">' . $ds[ 'link1' ] . '</a> ';
@@ -188,10 +179,11 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $maxnewschars = 200;
         }  
 
-   
-
-        #$content = nl2br(strip_tags(htmloutput($content)));
         $translate = new multiLanguage(detectCurrentLanguage());
+
+        $translate->detectLanguages($headline);
+        $headline = $translate->getTextByLanguage($headline);
+
         $translate->detectLanguages($content);
         $content = $translate->getTextByLanguage($content);
 
@@ -200,14 +192,9 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $content .= '<b class="text-primary">[...]</b><br><a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '" class="btn btn-primary">READMORE</a>';
         }
 
-    
-
-        #$tags = \webspell\Tags::getTagsLinked('news', $newsID);
-
         $data_array = array();
         $data_array['$related'] = $related;
         $data_array['$headline'] = $headline;
-        $data_array['$line'] = $line;
         $data_array['$rubrikname'] = $rubrikname;
         $data_array['$rubric_pic'] = $rubricpic;
         $data_array['$content'] = $content;

@@ -902,7 +902,16 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news` ORDER BY `date`");
         
         $rubrikname = getrubricname($db[ 'rubric' ]);
         $rubric = cleartext($db['rubric']);
+        $headline = htmloutput($db['headline']);
         $date = getformatdatetime($db[ 'date' ]);
+
+        $translate = new multiLanguage(detectCurrentLanguage());
+
+        $translate->detectLanguages($headline);
+        $headline = $translate->getTextByLanguage($headline);
+
+        $headline = toggle(htmloutput($headline), 1);
+            $headline = toggle($headline, 1);
 
             $db[ 'displayed' ] == 1 ?
             $displayed = '<font color="green"><b>' . $_lang[ 'yes' ] . '</b></font>' :
@@ -913,7 +922,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news` ORDER BY `date`");
         echo '<tr>
         <td>'.$date.'</td>
         <td>'.$rubrikname.'</td>
-        <td>'.$db['headline'].'</td>
+        <td>'.$headline.'</td>
         <td>'.$displayed.'</td>
         
         <td><a href="admincenter.php?site=admin_news&amp;action=edit&amp;newsID='.$db['newsID'].'" class="hidden-xs hidden-sm btn btn-warning" type="button">' . $_lang[ 'edit' ] . '</a>
