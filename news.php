@@ -127,12 +127,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
 
         #$n = 1;
         
-        $content = htmloutput($ds['content']);
-        $headline = htmloutput($ds['headline']);
-
-        $content = htmloutput($content);
-        $content = toggle($content, $ds[ 'newsID' ]);
-        
+                
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
@@ -177,15 +172,24 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $maxnewschars = $dx[ 'newschars' ];
         if (empty($maxnewschars)) {
         $maxnewschars = 200;
-        }  
+        } 
 
+        $headline = $ds[ 'headline' ];
+        $content = $ds[ 'content' ];
+        
         $translate = new multiLanguage(detectCurrentLanguage());
+            $translate->detectLanguages($headline);
+            $headline = $translate->getTextByLanguage($headline);
+            $translate->detectLanguages($content);
+            $content = $translate->getTextByLanguage($content);
+    
+    
+            $headline = toggle(htmloutput($headline), 1);
+            $headline = toggle($headline, 1);
+            $content = toggle(htmloutput($content), 1);
+            $content = toggle($content, 1);
 
-        $translate->detectLanguages($headline);
-        $headline = $translate->getTextByLanguage($headline);
 
-        $translate->detectLanguages($content);
-        $content = $translate->getTextByLanguage($content);
 
         if (mb_strlen($content) > $maxnewschars) {
         $content = mb_substr($content, 0, $maxnewschars);

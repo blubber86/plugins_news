@@ -76,21 +76,21 @@ if (isset($newsID)) {
         
         $i = 0;
         
-        $content = htmloutput($ds['content']);
+        /*$content = htmloutput($ds['content']);
         $headline = cleartext($ds['headline']);
         
 
         $content = htmloutput($content);
         $content = toggle($content, $ds[ 'newsID' ]);
-        $headline = clearfromtags($headline);
+        $headline = clearfromtags($headline);*/
         $comments = '';
 
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
-        $line = '<a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '">
-            <strong>' . $headline . '</strong>
-        </a>';
+        #$line = '<a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '">
+        #    <strong>' . $headline . '</strong>
+        #</a>';
 
         $related = "";
         if ($ds[ 'link1' ] && $ds[ 'url1' ] != "http://" && $ds[ 'window1' ]) {
@@ -111,13 +111,27 @@ if (isset($newsID)) {
             $related = "n/a";
         }    
 
-        
+        $headline = $ds[ 'headline' ];
+        $content = $ds[ 'content' ];
+
+        $translate = new multiLanguage(detectCurrentLanguage());
+            $translate->detectLanguages($headline);
+            $headline = $translate->getTextByLanguage($headline);
+            $translate->detectLanguages($content);
+            $content = $translate->getTextByLanguage($content);
+    
+    
+            $headline = toggle(htmloutput($headline), 1);
+            $headline = toggle($headline, 1);
+            $content = toggle(htmloutput($content), 1);
+            $content = toggle($content, 1); 
+
         $tags = \webspell\Tags::getTagsLinked('news', $newsID);
 
         $data_array = array();
         $data_array['$related'] = $related;
         $data_array['$newsID'] = $newsID;
-        $data_array['$line'] = $line;
+        $data_array['$headline'] = $headline;
         $data_array['$rubrikname'] = $rubrikname;
         $data_array['$rubric_pic'] = $rubricpic;
         $data_array['$content'] = $content;

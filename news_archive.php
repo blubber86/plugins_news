@@ -117,13 +117,24 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         $maxnewschars = 200;
         }  
 
-   
+        #$headlines = $ds[ 'headlines' ];
+        
+
+        $translate = new multiLanguage(detectCurrentLanguage());
+            $translate->detectLanguages($headlines);
+            $headlines = $translate->getTextByLanguage($headlines);
+            
+    
+    
+            $headlines = toggle(htmloutput($headlines), 1);
+            $headlines = toggle($headlines, 1);
+            
 
         $data_array = array();
         
         $data_array['$headlines'] = $headlines;
         $data_array['$rubrikname'] = $rubrikname;
-        $data_array['$content'] = $content;
+        
         $data_array['$poster'] = $poster;
         $data_array['$date'] = $date;
         
