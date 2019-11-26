@@ -1,5 +1,5 @@
 <!-- news_head -->
-<h2><span><i class="fa fa-newspaper-o"></i>&nbsp;$title</span></h2>
+<h2><span><i class="fas fa-newspaper"></i>&nbsp;$title</span></h2>
 <!-- END --> 
 
 <!-- news_content_area -->
@@ -9,14 +9,14 @@
         <div class="col-md-12 img-responsive">$rubric_pic</div>
         <div class="card-text col-md-12"></div>
         <div class="card-text col-md-12">$content</div>
-        <div class="col-md-12">Links: $related<hr class="small"><i class="fa fa-user"></i> by $poster | <i class="fa fa-calendar"></i> $date</div>
+        <div class="col-md-12">Links: $related<hr class="small"><i class="fas fa-user"></i> by $poster | <i class="fas fa-calendar-alt"></i> $date| <i class="fas fa-comment"></i> $comments </p></div>
     </div>
 </div>
 <br>
 <!-- END --> 
 
 <!-- news_headlines -->
-<li data-toggle="tooltip" title="$date - $time"> <a href="index.php?site=news_comments&amp;newsID=$news_id&amp;lang=$lang">$headlines</a> </li>
+<li data-toggle="tooltip" title="$date - $time"> <a href="index.php?site=news_content&amp;newsID=$news_id&amp;lang=$lang">$headlines</a> </li>
 <!-- END --> 
 
 <!-- news_category -->
@@ -81,7 +81,7 @@
 
 <!-- news_admin_details_head -->
 <div class="panel panel-default">
- <div class="panel-heading"> <i class="fa fa-globe"></i> $title_categories</a> &raquo; $linkcatname</div>
+ <div class="panel-heading"> <i class="fas fa-newspaper"></i> $title_categories</a> &raquo; $linkcatname</div>
  <div class="panel-body">
   <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_links" class="white">$title</a> &raquo; New / Edit</div>
   <div class="col-md-2 form-group"></div>

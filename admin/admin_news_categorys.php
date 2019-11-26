@@ -29,14 +29,19 @@
 \__________________________________________________________________*/
 # Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
-$_lang = $pm->plugin_language("admin_news_rubrics", $plugin_path);
+$plugin_language = $pm->plugin_language("admin_news_rubrics", $plugin_path);
 
-#$title = $_lang[ 'title' ]; #sc_datei Info
+#$title = $plugin_language[ 'title' ]; #sc_datei Info
 
 $_language->readModule('newsrubrics', false, true);
 
-if (!isnewsadmin($userID) || mb_substr(basename($_SERVER[ 'REQUEST_URI' ]), 0, 15) != "admincenter.php") {
-    die($_lang[ 'access_denied' ]);
+$ergebnis = safe_query("SELECT * FROM ".PREFIX."navigation_dashboard_links WHERE modulname='news_rubrics'");
+    while ($db=mysqli_fetch_array($ergebnis)) {
+      $accesslevel = 'is'.$db['accesslevel'].'admin';
+
+if (!$accesslevel($userID) || mb_substr(basename($_SERVER[ 'REQUEST_URI' ]), 0, 15) != "admincenter.php") {
+    die($plugin_language[ 'access_denied' ]);
+}
 }
 
 $filepath = $plugin_path."images/news-rubrics/";
@@ -85,10 +90,10 @@ if (isset($_POST[ 'save' ])) {
                                 );
                             }
                         } else {
-                            $errors[] = $_lang['broken_image'];
+                            $errors[] = $plugin_language['broken_image'];
                         }
                     } else {
-                        $errors[] = $_lang['unsupported_image_type'];
+                        $errors[] = $plugin_language['unsupported_image_type'];
                     }
                 } else {
                     $errors[] = $upload->translateError();
@@ -96,13 +101,13 @@ if (isset($_POST[ 'save' ])) {
             }
             if (count($errors)) {
                 $errors = array_unique($errors);
-                echo generateErrorBoxFromArray($_lang['errors_there'], $errors);
+                echo generateErrorBoxFromArray($plugin_language['errors_there'], $errors);
             }
         } else {
-            echo $_lang[ 'information_incomplete' ];
+            echo $plugin_language[ 'information_incomplete' ];
         }
     } else {
-        echo $_lang[ 'transaction_invalid' ];
+        echo $plugin_language[ 'transaction_invalid' ];
     }
 } elseif (isset($_POST[ 'saveedit' ])) {
     $CAPCLASS = new \webspell\Captcha;
@@ -155,10 +160,10 @@ if (isset($_POST[ 'save' ])) {
                                 );
                             }
                         } else {
-                            $errors[] = $_lang['broken_image'];
+                            $errors[] = $plugin_language['broken_image'];
                         }
                     } else {
-                        $errors[] = $_lang['unsupported_image_type'];
+                        $errors[] = $plugin_language['unsupported_image_type'];
                     }
                 } else {
                     $errors[] = $upload->translateError();
@@ -166,13 +171,13 @@ if (isset($_POST[ 'save' ])) {
             }
             if (count($errors)) {
                 $errors = array_unique($errors);
-                echo generateErrorBoxFromArray($_lang['errors_there'], $errors);
+                echo generateErrorBoxFromArray($plugin_language['errors_there'], $errors);
             }
         } else {
-            echo $_lang[ 'information_incomplete' ];
+            echo $plugin_language[ 'information_incomplete' ];
         }
     } else {
-        echo $_lang[ 'transaction_invalid' ];
+        echo $plugin_language[ 'transaction_invalid' ];
     }
 } elseif (isset($_GET[ 'delete' ])) {
     $CAPCLASS = new \webspell\Captcha;
@@ -190,7 +195,7 @@ if (isset($_POST[ 'save' ])) {
             @unlink($filepath . $rubricID . '.png');
         }
     } else {
-        echo $_lang[ 'transaction_invalid' ];
+        echo $plugin_language[ 'transaction_invalid' ];
     }
 }
 
@@ -204,31 +209,35 @@ if ($action == "add") {
     $CAPCLASS = new \webspell\Captcha;
     $CAPCLASS->createTransaction();
     $hash = $CAPCLASS->getHash();
-  echo'<div class="panel panel-default">
-  <div class="panel-heading">
-                            <i class="fa fa-indent"></i> ' . $_lang[ 'news_rubrics' ] . '
+  echo'<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news_rubrics'] . '
                         </div>
-            <div class="panel-body">
-   <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white">' . $_lang[ 'title' ] .
-    '</a> &raquo; <a href="admincenter.php?site=admin_news_categorys" class="white">'.$_lang['news_rubrics'].'</a> &raquo; '.$_lang['add_rubric'].'</div>
-<div class="col-md-2 form-group"></div><br><br>';
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'title' ] . '</a></li>
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news_categorys">' . $plugin_language[ 'news_rubrics' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">'.$plugin_language['add_rubric'].'</li>
+                </ol>
+            </nav> 
+    <div class="card-body">';
 
 	echo'<form class="form-horizontal" method="post" action="admincenter.php?site=admin_news_categorys" enctype="multipart/form-data">
-		<div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['rubric_name'].':</label>
+		<div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['rubric_name'].':</label>
     <div class="col-sm-8">
       <input type="text" class="form-control" name="name"  />
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['picture_upload'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['picture_upload'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
      <p class="form-control-static"><input name="pic" type="file" size="40" /></p></em></span>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
-      <input type="hidden" name="captcha_hash" value="'.$hash.'" /><button class="btn btn-success" type="submit" name="save" />'.$_lang['add_rubric'].'</button>
+      <input type="hidden" name="captcha_hash" value="'.$hash.'" /><button class="btn btn-success" type="submit" name="save" />'.$plugin_language['add_rubric'].'</button>
     </div>
   </div>
   </form></div></div>';
@@ -239,13 +248,18 @@ if ($action == "add") {
     $CAPCLASS = new \webspell\Captcha;
     $CAPCLASS->createTransaction();
     $hash = $CAPCLASS->getHash();
-    echo '<div class="panel panel-default"><div class="panel-heading">
-                            <i class="fa fa-indent"></i> ' . $_lang[ 'news_rubrics' ] . '
+    echo '<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news_rubrics'] . '
                         </div>
-                <div class="panel-body">
-    <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white">' . $_lang[ 'title' ] .
-    '</a> &raquo; <a href="admincenter.php?site=admin_news_categorys" class="white">'.$_lang['news_rubrics'].'</a> &raquo; '.$_lang['edit_rubric'].'</div>
-<div class="col-md-2 form-group"></div><br><br>';
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'title' ] . '</a></li>
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news_categorys">' . $plugin_language[ 'news_rubrics' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">'.$plugin_language['edit_rubric'].'</li>
+                </ol>
+            </nav> 
+    <div class="card-body">';
 
     
     $ds = mysqli_fetch_array(
@@ -257,32 +271,32 @@ if ($action == "add") {
     if (!empty($ds[ 'pic' ])) {
         $pic = '<img class="img-thumbnail" style="width: 100%; max-width: 600px" src="../' . $filepath . $ds[ 'pic' ] . '" alt="">';
     } else {
-        $pic = $_lang[ 'no_upload' ];
+        $pic = '<img id="img-upload" class="img-thumbnail" style="width: 100%; max-width: 150px" src="../' . $filepath . 'no-image.jpg" alt="">';
     }
 
 	echo'<form class="form-horizontal" method="post" action="admincenter.php?site=admin_news_categorys" enctype="multipart/form-data">
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['rubric_name'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['rubric_name'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
       <input type="text" class="form-control" name="name" value="'.getinput($ds['rubric']).'" /></em></span>
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['picture'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['picture'].':</label>
     <div class="col-sm-8">
       <p class="form-control-static">' . $pic . '</p>
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['picture_upload'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['picture_upload'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
      <p class="form-control-static"><input name="pic" type="file" size="40" /></p></em></span>
     </div>
   </div>
-  <div class="form-group">
+  <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
      <input type="hidden" name="captcha_hash" value="'.$hash.'" /><input type="hidden" name="rubricID" value="'.$ds['rubricID'].'" />
-     <button class="btn btn-success" type="submit" name="saveedit" />'.$_lang['edit_rubric'].'</button>
+     <button class="btn btn-warning" type="submit" name="saveedit" />'.$plugin_language['edit_rubric'].'</button>
     </div>
   </div>
   </form></div></div>';
@@ -290,19 +304,25 @@ if ($action == "add") {
 
 else {
 
-  echo'<div class="panel panel-default">
-  <div class="panel-heading">
-                            <i class="fa fa-indent"></i> ' . $_lang[ 'news_rubrics' ] . '
+  echo'<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news_rubrics'] . '
                         </div>
-    <div class="panel-body">
-    <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white">' . $_lang[ 'title' ] .
-    '</a> &raquo; <a href="admincenter.php?site=admin_news_categorys" class="white">'.$_lang['news_rubrics'].'</a> &raquo; New / Edit</div>
-<div class="col-md-2 form-group"></div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'title' ] . '</a></li>
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news_categorys">' . $plugin_language[ 'news_rubrics' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">New / Edit</li>
+                </ol>
+            </nav> 
+    <div class="card-body">
 
-
-<div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news_categorys&amp;action=add" class="btn btn-primary" type="button">' . $_lang[ 'new_rubric' ] . '</a>
-</div>
-<div class="col-md-2 form-group"></div>
+<div class="form-group row">
+    <label class="col-md-1 control-label">' . $plugin_language['options'] . ':</label>
+    <div class="col-md-8">
+      <a href="admincenter.php?site=admin_news_categorys&amp;action=add" class="btn btn-primary" type="button">' . $plugin_language[ 'new_rubric' ] . '</a>
+    </div>
+  </div>
 
 <div class="row">
 <div class="col-md-12"><br />';
@@ -314,9 +334,9 @@ else {
   echo'<table class="table table-striped">
     <thead>
       <tr>
-      <th><b>'.$_lang['rubric_name'].':</b></th>
-      <th><b>'.$_lang['picture'].':</b></th>
-      <th><b>'.$_lang['actions'].':</b></th>
+      <th><b>'.$plugin_language['rubric_name'].':</b></th>
+      <th><b>'.$plugin_language['picture'].':</b></th>
+      <th><b>'.$plugin_language['actions'].':</b></th>
    		</tr></thead>
           <tbody>';
 	 $CAPCLASS = new \webspell\Captcha;
@@ -329,16 +349,21 @@ else {
         } else {
             $td = 'td2';
         }
+
+        if (!empty($ds[ 'pic' ])) {
+        $pic = '<img class="img-thumbnail" style="width: 100%; max-width: 600px" src="../' . $filepath . $ds[ 'pic' ] . '" alt="">';
+    } else {
+        $pic = '<img id="img-upload" class="img-thumbnail" style="width: 100%; max-width: 150px" src="../' . $filepath . 'no-image.jpg" alt="">';
+    }
     
 		echo'<tr>
       <td>'.getinput($ds['rubric']).'</td>
-      <td><img class="img-thumbnail" style="width: 100%; max-width: 350px" src="../' . $filepath . $ds[ 'pic' ] . '" alt="" width="100%" /></td>
-      <td><a href="admincenter.php?site=admin_news_categorys&amp;action=edit&amp;rubricID='.$ds['rubricID'].'" class="hidden-xs hidden-sm btn btn-warning" type="button">' . $_lang[ 'edit' ] . '</a>
+      <td>'.$pic.'</td>
+      <td><a href="admincenter.php?site=admin_news_categorys&amp;action=edit&amp;rubricID='.$ds['rubricID'].'" class="btn btn-warning" type="button">' . $plugin_language[ 'edit' ] . '</a>
 
-      <input class="hidden-xs hidden-sm btn btn-danger" type="button" onclick="MM_confirm(\''.$_lang['really_delete'].'\', \'admincenter.php?site=admin_news_categorys&amp;delete=true&amp;rubricID='.$ds['rubricID'].'&amp;captcha_hash='.$hash.'\')" value="'.$_lang['delete'].'" />
+      <input class="btn btn-danger" type="button" onclick="MM_confirm(\''.$plugin_language['really_delete'].'\', \'admincenter.php?site=admin_news_categorys&amp;delete=true&amp;rubricID='.$ds['rubricID'].'&amp;captcha_hash='.$hash.'\')" value="'.$plugin_language['delete'].'" />
 
-      <a href="admincenter.php?site=admin_news_categorys&amp;action=edit&amp;rubricID='.$ds['rubricID'].'"  class="mobile visible-xs visible-sm" type="button"><i class="fa fa-pencil"></i></a>
-      <a class="mobile visible-xs visible-sm" type="button" onclick="MM_confirm(\'' . $_lang['really_delete'] . '\', \'admincenter.php?site=admin_news_categorys&amp;delete=true&amp;rubricID='.$ds['rubricID'].'&amp;captcha_hash='.$hash.'\')" /><i class="fa fa-times"></i></a></td>
+      </td>
     </tr>';
       
       $i++;

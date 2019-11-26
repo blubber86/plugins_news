@@ -69,6 +69,8 @@ $language_array = array(
     'add_to_message'=>'add to message',
     'upload'=>'upload',
     'title' => 'News',
+    'options'=>'Options',
+    'publication_setting' => 'Publication Setting',
     'info'=> '<div class="alert alert-warning" role="alert"><b>Voice Application:</b><br>
 The headline and the text must have a corresponding language tag, which looks like this.<br>{[de]} Überschrift und Text in deutscher Sprache.<br>
 {[en]} Heading and text in English.</div>',

@@ -1,12 +1,6 @@
-/*NEWS*/
-/*.pagination>li>a,.pagination>li>span{position:relative;float:left;padding:6px 12px;margin-left:-1px;line-height:1.42857143;color:#fe821d;text-decoration:none;background-color:#fff;border:1px solid #ddd}
-.pagination>.active>a,.pagination>.active>a:focus,.pagination>.active>a:hover,.pagination>.active>span,.pagination>.active>span:focus,.pagination>.active>span:hover{z-index:3;color:#fff;cursor:default;background-color:#fe821d;border-color:#fe821d}
-*/
-
-/*sc_headlines*/
 .box {
 position: relative;
-width: 554px;
+width: 654px;
 height: 266px;
 overflow:hidden;
 }
@@ -31,7 +25,7 @@ opacity: 1.9;
 
 .box .title, .box .slogan {
 position: absolute;
-width: 554px;
+width: 654px;
 height: 266px;
 text-transform: uppercase;
 -webkit-transition: all 1s linear;
@@ -56,7 +50,7 @@ opacity: 0.8;
 } 
 
 figure {
-	width: 554px;
+	width: 654px;
 	height: 266px;
 	overflow: hidden;
 }

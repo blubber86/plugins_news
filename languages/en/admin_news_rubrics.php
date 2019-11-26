@@ -48,6 +48,7 @@ $language_array = Array(
   'picture_upload'=>'picture upload',
   'really_delete'=>'Really delete this section?',
   'rubric_name'=>'Rubrik Name',
+  'options'=>'Options',
   'transaction_invalid'=>'transaction invalid'
 );
 

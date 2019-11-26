@@ -32,11 +32,16 @@ $language_array = array(
 
 /* do not edit above this line */
 
-    'title' => 'Neuigkeiten / NEWS',
+    'title' => 'NEWS',
     'headline' => 'Headline',
     'date' => 'Date',
     'rubric' => 'Rubric',
-    'news' => 'News Archive'
+    'news' => 'News Archive',
+    'comment' => '<a href="$url">[1] comment</a>, latest by $lastposter - $lastdate',
+    'comments' => '<a href="$url">[$anzcomments] comments</a>, latest by $lastposter - $lastdate',
+    'no_comment' => '<a href="$url">no comments</a>',
+    'no_comments' => 'disable comments',
+    'off_comments' => 'Comments disabled'
 
 
 );

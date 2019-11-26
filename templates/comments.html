@@ -1,0 +1,137 @@
+<!-- comments_title -->
+<h2><span><i class="fas fa-comments"></i>&nbsp;$comments</span></h2>
+<!-- END -->
+
+<!-- comments_head -->
+<form name="form" method="post" action="index.php?site=news_comments&delete=true">
+    <!--$sorter-->
+<!-- END -->
+
+<!-- comments_content_area -->
+
+<section class="card">
+    <div class="card-body ws-comments row">
+        <div class="col-md-2 pull-left avatar hidden-xs">
+            $avatar
+        </div>
+		<div class="col-md-10">
+	        <div class="pull-left">
+	            $content<br>
+	        </div>
+		</div>
+    </div>
+
+    <footer class="card-footer">
+       
+            <i class="fas fa-user"></i> by $poster
+            | <i class="fas fa-calendar"></i> $date
+            <span class="float-right">$edit $actions</span>
+        
+    </footer>
+
+</section>
+<!-- END -->
+<!-- comments_add_user -->
+
+<div class="card">
+    <div class="card-body">
+<script>
+    <!--
+    var comment_submit = false;
+
+    function chkFormular() {
+        if (document.getElementById('message').value === "") {
+            alert('%enter_message%');
+            document.getElementById('message').focus();
+
+            return false;
+        }
+        if (!validbbcode(document.getElementById('message').value)) {
+
+            return false;
+        }
+        if (comment_submit) {
+
+            return false;
+        }
+        comment_submit = true;
+    }
+    -->
+</script>
+
+<form id="post" name="post" action="index.php?site=news_comments" method="post" onsubmit="return chkFormular()">
+    <h4>$title_comment</h4>
+
+    <div class="form-group">
+        <textarea name="message" id="message" rows="3" class="form-control"></textarea>
+    </div>
+    <div class="form-group">
+        <input type="submit" name="saveusercomment" value="$post_comment" class="btn btn-primary">
+    </div>
+
+    <input type="hidden" name="userID" value="$userID">
+    <input type="hidden" name="referer" value="$referer">
+    <input type="hidden" name="parentID" value="$parentID">
+    <input type="hidden" name="type" value="$type">
+</form>
+</div></div>
+<!-- END -->
+<!-- comments_foot -->
+<table class="table">
+    <tr>
+        <td>$page_link</td>
+        <td class="text-right">$submit</td>
+    </tr>
+</table>
+</form>
+<!-- END --> 
+<!-- comments_edit -->
+
+<script>
+    <!--
+    function chkFormular() {
+        if (document.getElementById('message').value == "") {
+            alert('%enter_message%');
+            document.getElementById('message').focus();
+
+            return false;
+        }
+        if (!validbbcode(document.getElementById('message').value)) {
+
+            return false;
+        }
+
+    }
+    -->
+</script>
+<h2><span><i class="fas fa-comments"></i>&nbsp;$title_editcomment</span></h2>
+<div class="card">
+    <div class="card-body">
+
+<form id="post" name="post" action="index.php?site=news_comments" method="post" onsubmit="return chkFormular()">
+    <div class="form-group">
+                            <textarea
+                                name="message"
+                                id="message"
+                                rows="5"
+                                cols="35"
+                                class="form-control">$message</textarea>
+                        </div>
+                        <div><input type="hidden" name="authorID" value="$authorID">
+                            <input type="hidden" name="commentID" value="$id">
+                            <input type="hidden" name="referer" value="$referer">
+                            <input type="hidden" name="userID" value="$userID">
+                            <input type="submit" name="saveeditcomment" value="$edit_comment" class="btn btn-warning"></td>
+                    </div>
+                
+    
+</form>
+</div></div>
+<!-- END --> 
+<!-- comments_add_visitor -->
+
+    <div class="form-group">
+        $no_access
+    </div>
+    
+<!-- END --> 

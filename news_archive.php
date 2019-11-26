@@ -31,6 +31,9 @@
 $pm = new plugin_manager(); 
 $_lang = $pm->plugin_language("news", $plugin_path);
 
+// -- COMMENTS INFORMATION -- //
+include_once("news_functions.php");
+
 if(isset($_GET['page'])) $page=(int)$_GET['page'];
   else $page = 1;
 
@@ -43,12 +46,12 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
     $template = $GLOBALS["_template"]->loadTemplate("news_archive","head", $data_array, $plugin_path);
     echo $template;
 
-   $alle=safe_query("SELECT newsID FROM ".PREFIX."plugins_news");
-  $gesamt = mysqli_num_rows($alle);
-  $pages=1;
+    $alle=safe_query("SELECT newsID FROM ".PREFIX."plugins_news");
+    $gesamt = mysqli_num_rows($alle);
+    $pages=1;
 
   
-  $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
+        $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dn = mysqli_fetch_array($settings);
 
     
@@ -86,23 +89,19 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
         $time = getformattime($ds[ 'date' ]);
-        $rubrikname = getrubricname($ds[ 'rubric' ]);
+        $rubrikname = getnewsrubricname($ds[ 'rubric' ]);
         $rubrikname_link = getinput($rubrikname);
-        $rubricpic_name = getrubricpic($ds[ 'rubric' ]);
+        $rubricpic_name = getnewsrubricpic($ds[ 'rubric' ]);
         
-
-
-                $headlines = '<a href="index.php?site=news_comments&amp;newsID=' . $ds[ 'newsID' ] . '">' .
-                    cleartext($ds['headline']) . '</a><br>';
+        $headlines = '<a href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '">' .
+                    $ds['headline'] . '</a><br>';
          
-        $content = htmloutput($ds['content']);
+        $content = $ds['content'];
         
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
         
-
- 
         $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dx = mysqli_fetch_array($settings);
 
@@ -117,24 +116,13 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         $maxnewschars = 200;
         }  
 
-        #$headlines = $ds[ 'headlines' ];
-        
-
         $translate = new multiLanguage(detectCurrentLanguage());
-            $translate->detectLanguages($headlines);
-            $headlines = $translate->getTextByLanguage($headlines);
+        $translate->detectLanguages($headlines);
+        $headlines = $translate->getTextByLanguage($headlines);
             
-    
-    
-            $headlines = toggle(htmloutput($headlines), 1);
-            $headlines = toggle($headlines, 1);
-            
-
         $data_array = array();
-        
         $data_array['$headlines'] = $headlines;
         $data_array['$rubrikname'] = $rubrikname;
-        
         $data_array['$poster'] = $poster;
         $data_array['$date'] = $date;
         
@@ -145,7 +133,9 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date` ")
         $n++;
         
        }
+
        $template = $GLOBALS["_template"]->loadTemplate("news_archive","foot", $data_array, $plugin_path);
-            echo $template;
+       echo $template;
+
    if($pages>1) echo $page_link;
 
