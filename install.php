@@ -6,62 +6,64 @@ function goBack() {
 <?php
 
 #@info:	settings
-$modulname	 	= 	"news"; 									// name to uninstall
-$plugin_table 	= 	"news"; 									// name of the mysql table
-$str			=	"News"; 									// name of the plugin
-$navi_name		=	"{[de]}Neuigkeiten{[en]}News";				// name of the Navi
-$description	=	"Mit diesem Plugin könnt ihr eure news anzeigen lassen."; 	// description of the plugin
-$admin_file 	=	"admin_news";								// administration file
-$activate 		=	"1";										// plugin activate 1 yes | 0 no
-$author			=	"T-Seven";									// author
-$website		= 	"http://webspell-rm.de";					// authors website
-$index_link		=	"sc_headlines,admin_news,news_archive,news,news_comments";// index file (without extension, also no .php)
-$sc_link 		=	"sc_headlines";  							// sc_ file (visible as module/box)
-$hiddenfiles 	=	"";											// hiddenfiles (background working, no display anywhere)
-$version		=	"V.1.0";									// current version, visit authors website for updates, fixes, ..
-$path			=	"includes/plugins/news/";					// plugin files location
-$navi_link		=	"news";					 					// navi link file (index.php?site=...)
-$dashnavi_link	=	"admincenter.php?site=admin_news"; 			// dashboard_navigation link file
+$modulname1	 	= 	"news"; 									// name to uninstall
+$plugin_table1 	= 	"news"; 									// name of the mysql table
+$str1			=	"News"; 									// name of the plugin
+$navi_name1		=	"{[de]}Neuigkeiten{[en]}News";				// name of the Navi
+$description1	=	"Mit diesem Plugin könnt ihr eure news anzeigen lassen."; 	// description of the plugin
+$admin_file1 	=	"admin_news";								// administration file
+$activate1 		=	"1";										// plugin activate 1 yes | 0 no
+$author1		=	"T-Seven";									// author
+$website1		= 	"https://webspell-rm.de";					// authors website
+$index_link1	=	"admin_news,news_archive,news,news_comments,news_contents";// index file (without extension, also no .php)
+$sc_link1 		=	"widget_headlines";  							// sc_ file (visible as module/box)
+$hiddenfiles1 	=	"";											// hiddenfiles (background working, no display anywhere)
+$version1		=	"1.2";										// current version, visit authors website for updates, fixes, ..
+$path1			=	"includes/plugins/news/";					// plugin files location
+$navi_link1		=	"news";					 					// navi link file (index.php?site=...)
+$dashnavi_link1	=	"admin_news"; 								// dashboard_navigation link file
 
 #@info:	settings
 $modulname2	 	= 	"news_rubrics"; 							// name to uninstall
-$plugin_table2 	= 	"categorys"; 								// name of the mysql table
+$plugin_table2 	= 	"news_rubrics"; 							// name of the mysql table
 $str2			=	"News Kategorien"; 							// name of the plugin
 $navi_name2		=	"{[de]}News Archive{[en]}News  Archive";	// name of the Navi
 $description2	=	"Mit diesem Plugin könnt ihr eure news Kategorien anzeigen lassen."; 	// description of the plugin
 $admin_file2	=	"admin_news_categorys";						// administration file
 $activate2 		=	"1";										// plugin activate 1 yes | 0 no
 $author2		=	"T-Seven";									// author
-$website2		= 	"http://webspell-rm.de";					// authors website
-$index_link2	=	"admin_news_categorys,news";				// index file (without extension, also no .php)
+$website2		= 	"https://webspell-rm.de";					// authors website
+$index_link2	=	"admin_news_categorys";						// index file (without extension, also no .php)
 $sc_link2 		=	"";  										// sc_ file (visible as module/box)
 $hiddenfiles2 	=	"";											// hiddenfiles (background working, no display anywhere)
-$version2		=	"V.1.0";									// current version, visit authors website for updates, fixes, ..
+$version2		=	"1.2";										// current version, visit authors website for updates, fixes, ..
 $path2			=	"includes/plugins/news/";					// plugin files location
 $navi_link2		=	"news_archive"; 							// navi link file (index.php?site=...)
 $dashnavi_link2	=	""; 										// dashboard_navigation link file
 
 #@info:	settings
 $modulname3	 	= 	"news_settings"; 							// name to uninstall
-$plugin_table3 	= 	"settings"; 								// name of the mysql table
+$plugin_table3 	= 	"news_settings"; 							// name of the mysql table
 $str3			=	"Neuigkeiten Settings"; 					// name of the plugin
 $description3	=	"Mit diesem Plugin könnt ihr eure news Settings einstellen."; 	// description of the plugin
 $admin_file3	=	"admin_news_settings";						// administration file
 $activate3 		=	"1";										// plugin activate 1 yes | 0 no
 $author3		=	"T-Seven";									// author
-$website3		= 	"http://webspell-rm.de";					// authors website
-$index_link3	=	"admin_news_settings,news,news_comments";	// index file (without extension, also no .php)
+$website3		= 	"https://webspell-rm.de";					// authors website
+$index_link3	=	"admin_news_settings,news";					// index file (without extension, also no .php)
 $sc_link3 		=	"";  										// sc_ file (visible as module/box)
 $hiddenfiles3 	=	"";											// hiddenfiles (background working, no display anywhere)
-$version3		=	"V.1.0";									// current version, visit authors website for updates, fixes, ..
+$version3		=	"1.2";										// current version, visit authors website for updates, fixes, ..
 $path3			=	"includes/plugins/news/";					// plugin files location
-$navi_link3		=	"news_comments";					 		// navi link file (index.php?site=...)
+$navi_link3		=	"news_contents";					 		// navi link file (index.php?site=...)
 $dashnavi_link3	=	""; 										// dashboard_navigation link file
 
 $modulname4	 	= 	"news_archive"; 							// name to uninstall
-$navi_link4		=	"news_archive"; 							// navi link file (index.php?site=...)
-$modulname5	 	= 	"news_comments"; 							// name to uninstall
-$navi_link5		=	"news_comments";					 		// navi link file (index.php?site=...)
+$plugin_table4	=	"news_archive"; 							// navi link file (index.php?site=...)
+$modulname5	 	= 	"news_contents"; 							// name to uninstall
+$plugin_table5	=	"news_contents";					 		// navi link file (index.php?site=...)
+
+$str6			=	"news_comments"; 							// name of the plugin
 
 
 #@info: database
@@ -81,6 +83,7 @@ $installa = "CREATE TABLE `" . PREFIX . "plugins_news` (
   `banner` varchar(255) NOT NULL DEFAULT '',
   `displayed` varchar(255) NOT NULL,
   `screens` text NOT NULL,
+  `comments` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`newsID`)
 ) AUTO_INCREMENT=1
   DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci";
@@ -103,12 +106,32 @@ $installc = "CREATE TABLE `" . PREFIX . "plugins_news_settings` (
   `newschars` int(11) NOT NULL DEFAULT '0',
   `headlineschars` int(11) NOT NULL DEFAULT '0',
   `topnewschars` int(11) NOT NULL DEFAULT '0',
+  `feedback` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`newssetID`)
 ) AUTO_INCREMENT=1
   DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci";  
 
-$installd = "INSERT INTO `".PREFIX."plugins_news_settings` (`newssetID`, `admin_news`, `news`, `newsarchiv`, `headlines`, `newschars`, `headlineschars`, `topnewschars`) VALUES
-(1, 5, 3, 10, 4, 700, 200, 200)";
+$installd = "INSERT INTO `".PREFIX."plugins_news_settings` (`newssetID`, `admin_news`, `news`, `newsarchiv`, `headlines`, `newschars`, `headlineschars`, `topnewschars`, `feedback`) VALUES
+(1, 5, 3, 10, 4, 700, 200, 200, 5)";
+
+$installe = "CREATE TABLE `" . PREFIX . "plugins_news_comments` (
+  `commentID` int(11) NOT NULL AUTO_INCREMENT,
+  `parentID` int(11) NOT NULL DEFAULT '0',
+  `type` char(2) NOT NULL DEFAULT '',
+  `userID` int(11) NOT NULL DEFAULT '0',
+  `nickname` varchar(255) NOT NULL DEFAULT '',
+  `date` int(14) NOT NULL DEFAULT '0',
+  `comment` text NOT NULL,
+  `url` varchar(255) NOT NULL DEFAULT '',
+  `email` varchar(255) NOT NULL DEFAULT '',
+  `ip` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`commentID`),
+  KEY `parentID` (`parentID`),
+  KEY `type` (`type`),
+  KEY `date` (`date`)
+) AUTO_INCREMENT=1
+  DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci"; 
+
 
 
 # 	= = =		/!\ DO NOT EDIT THE LINES BELOW !!!		= = =
@@ -118,7 +141,7 @@ $installd = "INSERT INTO `".PREFIX."plugins_news_settings` (`newssetID`, `admin_
 # 	= = =		/!\ Ab hier nichts mehr ändern !!!		= = =
   
 $add_plugin1 = "INSERT INTO `".PREFIX."plugins` (`name`, `modulname`, `description`, `admin_file`, `activate`, `author`, `website`, `index_link`, `sc_link`, `hiddenfiles`, `version`, `path`) 
-				VALUES ('$str', '$modulname', '$description', '$admin_file', '$activate', '$author', '$website', '$index_link', '$sc_link', '$hiddenfiles', '$version', '$path');";
+				VALUES ('$str1', '$modulname1', '$description1', '$admin_file1', '$activate1', '$author1', '$website1', '$index_link1', '$sc_link1', '$hiddenfiles1', '$version1', '$path1');";
 
 $add_plugin2 = "INSERT INTO `".PREFIX."plugins` (`name`, `modulname`, `description`, `admin_file`, `activate`, `author`, `website`, `index_link`, `sc_link`, `hiddenfiles`, `version`, `path`) 
 				VALUES ('$str2', '$modulname2', '$description2', '$admin_file2', '$activate2', '$author2', '$website2', '$index_link2', '$sc_link2', '$hiddenfiles2', '$version2', '$path2');";				
@@ -127,46 +150,42 @@ $add_plugin3 = "INSERT INTO `".PREFIX."plugins` (`name`, `modulname`, `descripti
 				VALUES ('$str3', '$modulname3', '$description3', '$admin_file3', '$activate3', '$author3', '$website3', '$index_link3', '$sc_link3', '$hiddenfiles3', '$version3', '$path3');";
 
 $add_navigation1 = "INSERT INTO `".PREFIX."navigation_website_sub` (`mnavID`, `name`, `modulname`, `url`, `sort`, `indropdown`) 
-					VALUES ('1','$navi_name', '$modulname', 'index.php?site=$navi_link', '1', '1');";
+					VALUES ('1','$navi_name1', '$modulname1', 'index.php?site=$navi_link1', '1', '1');";
 
 $add_navigation2 = "INSERT INTO `".PREFIX."navigation_website_sub` (`mnavID`, `name`, `modulname`, `url`, `sort`, `indropdown`) 
-					VALUES ('1','$navi_name2', '$modulname4', 'index.php?site=$navi_link4', '1', '1');";
+					VALUES ('1','$navi_name2', '$modulname4', 'index.php?site=$navi_link2', '1', '1');";
 
 $add_dashboard_navigation = "INSERT INTO `".PREFIX."navigation_dashboard_links` (`catID`, `name`, `modulname`, `url`, `accesslevel`, `sort`) 
-					VALUES ('6','$navi_name', '$modulname', '$dashnavi_link', 'user', '1')";	
+					VALUES ('7','$navi_name1', '$modulname1', 'admincenter.php?site=$dashnavi_link1', 'news', '1')";
 
-$add_module1 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `le_activated`, `re_activated`, `activated`, `deactivated`, `sort`) 
-				VALUES ('$plugin_table', '$modulname', '0', '0', '1', '0', '1');";
+$add_module1 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `activated`, `le_activated`, `re_activated`, `deactivated`, `head_activated`, `content_head_activated`, `content_foot_activated`, `sort`) VALUES ('$plugin_table1', '$modulname1', '1', '0', '0', '0', '0', '0', '0', '1');";
 
-$add_module2 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `le_activated`, `re_activated`, `activated`, `deactivated`, `sort`) 
-				VALUES ('$navi_link2', '$modulname4', '0', '0', '1', '0', '1');";
+$add_module2 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `activated`, `le_activated`, `re_activated`, `deactivated`, `head_activated`, `content_head_activated`, `content_foot_activated`, `sort`) VALUES ('$plugin_table4', '$modulname4', '1', '0', '0', '0', '0', '0', '0', '1');";
 
-$add_module3 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `le_activated`, `re_activated`, `activated`, `deactivated`, `sort`) 
-				VALUES ('$navi_link3', '$modulname5', '0', '0', '1', '0', '1');";
+$add_module3 = "INSERT INTO `".PREFIX."settings_moduls` (`module`, `modulname`, `activated`, `le_activated`, `re_activated`, `deactivated`, `head_activated`, `content_head_activated`, `content_foot_activated`, `sort`) VALUES ('$plugin_table5', '$modulname5', '1', '0', '0', '0', '0', '0', '0', '1');";
 
-#$add_comments = "INSERT INTO `".PREFIX."comments_settings` (`ident`, `modul`, `id`, `parent`) VALUES ('vi', 'news', 'vidID', 'comments')";
-	
+
 			
 if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }		
 			
-		echo "<div class='panel panel-default'>
-			<div class='panel-heading'>
-				<h3 class='panel-title'>$str Database Installation</h3>
+		echo "<div class='card'>
+			<div class='card-header'>
+				<h3>$str1 Database Installation</h3>
 			</div>
-			<div class='panel-body'>";
+			<div class='card-body'>";
 	
 		# if table exists
 		try {
 			if(mysqli_query($_database, $installa)) { 
-				echo "<div class='alert alert-success'>$str installation successful <br />";
-				echo "$str installation erfolgreich <br /></div>";
+				echo "<div class='alert alert-success'>$str1 installation successful <br />";
+				echo "$str1 installation erfolgreich <br /></div>";
 			} else {
-					echo "<div class='alert alert-warning'>$str entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "<div class='alert alert-warning'>$str1 entry already exists <br />";
+					echo "$str1 Eintrag schon vorhanden <br /></div>";
 					echo "<hr>";
 			}	
 		} CATCH (EXCEPTION $x) {
-				echo "<div class='alert alert-danger'>$str installation failed <br />";
+				echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 				echo "Send the following line to the support team:<br /><br />";
 				echo "<pre>".$x->message()."</pre>		
 					  </div>";
@@ -176,10 +195,10 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		try {
 			if(mysqli_query($_database, $installb)) { 
 				echo "<div class='alert alert-success'>$str2 installation successful <br />";
-				echo "$str installation erfolgreich <br /></div>";
+				echo "$str2 installation erfolgreich <br /></div>";
 			} else {
 					echo "<div class='alert alert-warning'>$str2 entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "$str2 Eintrag schon vorhanden <br /></div>";
 					echo "<hr>";
 			}	
 		} CATCH (EXCEPTION $x) {
@@ -193,10 +212,10 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		try {
 			if(mysqli_query($_database, $installc)) { 
 				echo "<div class='alert alert-success'>$str3 installation successful <br />";
-				echo "$str installation erfolgreich <br /></div>";
+				echo "$str3 installation erfolgreich <br /></div>";
 			} else {
 					echo "<div class='alert alert-warning'>$str3 entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "$str3 Eintrag schon vorhanden <br /></div>";
 					echo "<hr>";
 			}	
 		} CATCH (EXCEPTION $x) {
@@ -209,32 +228,49 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		# if table exists
 		try {
 			if(mysqli_query($_database, $installd)) { 
-				echo "<div class='alert alert-success'>$str installation successful <br />";
-				echo "$str installation erfolgreich <br /></div>";
+				echo "<div class='alert alert-success'>$str2 installation successful <br />";
+				echo "$str2 installation erfolgreich <br /></div>";
 			} else {
-					echo "<div class='alert alert-warning'>$str entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "<div class='alert alert-warning'>$str2 entry already exists <br />";
+					echo "$str2 Eintrag schon vorhanden <br /></div>";
 					echo "<hr>";
 			}	
 		} CATCH (EXCEPTION $x) {
-				echo "<div class='alert alert-danger'>$str installation failed <br />";
+				echo "<div class='alert alert-danger'>$str2 installation failed <br />";
 				echo "Send the following line to the support team:<br /><br />";
 				echo "<pre>".$x->message()."</pre>		
 					  </div>";
 		}
-		
+
+		# if table exists
+		try {
+			if(mysqli_query($_database, $installe)) { 
+				echo "<div class='alert alert-success'>$str6 installation successful <br />";
+				echo "$str6 installation erfolgreich <br /></div>";
+			} else {
+					echo "<div class='alert alert-warning'>$str6 entry already exists <br />";
+					echo "$str6 Eintrag schon vorhanden <br /></div>";
+					echo "<hr>";
+			}	
+		} CATCH (EXCEPTION $x) {
+				echo "<div class='alert alert-danger'>$str6 installation failed <br />";
+				echo "Send the following line to the support team:<br /><br />";
+				echo "<pre>".$x->message()."</pre>		
+					  </div>";
+		}
+
 		# Add to Plugin-Manager
-		if(mysqli_num_rows(safe_query("SELECT name FROM `".PREFIX."plugins` WHERE name ='".$str."'"))>0) {
-					echo "<div class='alert alert-warning'>$str Plugin Manager entry already exists <br />";
-					echo "$str Plugin Manager Eintrag schon vorhanden <br />";
-					echo "$str Entrée Plugin Manager existe déjà <br /></div>";
+		if(mysqli_num_rows(safe_query("SELECT name FROM `".PREFIX."plugins` WHERE name ='".$str1."'"))>0) {
+					echo "<div class='alert alert-warning'>$str1 Plugin Manager entry already exists <br />";
+					echo "$str1 Plugin Manager Eintrag schon vorhanden <br />";
+					echo "$str1 Entrée Plugin Manager existe déjà <br /></div>";
 					echo "<hr>";
 		} else {
 			try {
 				if(safe_query($add_plugin1)) { 
-					echo "<div class='alert alert-success'>$str added to the plugin manager <br />";
-					echo "$str wurde dem Plugin Manager hinzugef&uuml;gt <br />";
-					echo "$str a &eacute;t&eacute; ajout&eacute; au manager de plugin <br />";
+					echo "<div class='alert alert-success'>$str1 added to the plugin manager <br />";
+					echo "$str1 wurde dem Plugin Manager hinzugef&uuml;gt <br />";
+					echo "$str1 a &eacute;t&eacute; ajout&eacute; au manager de plugin <br />";
 					echo "<a href = '/admin/admincenter.php?site=plugin-manager' target='_blank'><b>LINK => Plugin Manager</b></a></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to plugin manager failed <br />";
@@ -242,7 +278,7 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 					echo "Echec d'ajout au manager de plugin <br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -268,7 +304,7 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 					echo "Echec d'ajout au manager de plugin <br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -284,7 +320,7 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		} else {
 			try {
 				if(safe_query($add_plugin3)) { 
-					echo "<div class='alert alert-success'>$str2 added to the plugin manager <br />";
+					echo "<div class='alert alert-success'>$str3 added to the plugin manager <br />";
 					echo "$str3 wurde dem Plugin Manager hinzugef&uuml;gt <br />";
 					echo "$str3 a &eacute;t&eacute; ajout&eacute; au manager de plugin <br />";
 					echo "<a href = '/admin/admincenter.php?site=plugin-manager' target='_blank'><b>LINK => Plugin Manager</b></a></div>";
@@ -294,7 +330,7 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 					echo "Echec d'ajout au manager de plugin <br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str3 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -302,22 +338,22 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		}
 
 		# Add to navigation
-		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_website_sub` WHERE `name`='$str' AND `url`='index.php?site=$navi_link'"))>0) {
-					echo "<div class='alert alert-warning'>$str Navigation entry already exists <br />";
-					echo "$str Navigationseintrag schon vorhanden <br /></div>";
+		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_website_sub` WHERE `name`='$str1' AND `url`='index.php?site=$navi_link1'"))>0) {
+					echo "<div class='alert alert-warning'>$str1 Navigation entry already exists <br />";
+					echo "$str1 Navigationseintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_navigation1)) { 
-					echo "<div class='alert alert-success'>$str added to the Navigation <br />";
-					echo "$str wurde der Navigation hinzugef&uuml;gt <br />";
+					echo "<div class='alert alert-success'>$str1 added to the Navigation <br />";
+					echo "$str1 wurde der Navigation hinzugef&uuml;gt <br />";
 					echo "<a href = '/admin/admincenter.php?site=navigation' target='_blank'><b>LINK => Navigation</b></a></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Navigation failed <br />";
 					echo "Zur Navigation hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -325,22 +361,22 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		}
 
 		# Add to navigation 2
-		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_website_sub` WHERE `name`='$str' AND `url`='index.php?site=$navi_link2'"))>0) {
-					echo "<div class='alert alert-warning'>$str Navigation entry already exists <br />";
-					echo "$str Navigationseintrag schon vorhanden <br /></div>";
+		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_website_sub` WHERE `name`='$str2' AND `url`='index.php?site=$navi_link2'"))>0) {
+					echo "<div class='alert alert-warning'>$str2 Navigation entry already exists <br />";
+					echo "$str2 Navigationseintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_navigation2)) { 
-					echo "<div class='alert alert-success'>$str added to the Navigation <br />";
-					echo "$str wurde der Navigation hinzugef&uuml;gt <br />";
+					echo "<div class='alert alert-success'>$str2 added to the Navigation <br />";
+					echo "$str2 wurde der Navigation hinzugef&uuml;gt <br />";
 					echo "<a href = '/admin/admincenter.php?site=navigation' target='_blank'><b>LINK => Navigation</b></a></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Navigation failed <br />";
 					echo "Zur Navigation hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str2 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -349,22 +385,22 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 
 
 		# Add to dashboard navigation
-		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_dashboard_links` WHERE `name`='$str' AND `url`='$dashnavi_link'"))>0) {
-					echo "<div class='alert alert-warning'>$str Dashboard Navigation entry already exists <br />";
-					echo "$str Dashboard Navigationseintrag schon vorhanden <br /></div>";
+		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."navigation_dashboard_links` WHERE `name`='$str1' AND `url`='admincenter.php?site=$dashnavi_link1'"))>0) {
+					echo "<div class='alert alert-warning'>$str1 Dashboard Navigation entry already exists <br />";
+					echo "$str1 Dashboard Navigationseintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_dashboard_navigation)) { 
-					echo "<div class='alert alert-success'>$str added to the Dashboard Navigation <br />";
-					echo "$str wurde der Dashboard Navigation hinzugef&uuml;gt <br />";
+					echo "<div class='alert alert-success'>$str1 added to the Dashboard Navigation <br />";
+					echo "$str1 wurde der Dashboard Navigation hinzugef&uuml;gt <br />";
 					echo "<a href = '/admin/admincenter.php?site=dashnavi' target='_blank'><b>LINK => Dashboard Navigation</b></a></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Dashboard Navigation failed <br />";
 					echo "Zur Dashboard Navigation hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -372,21 +408,21 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		}
 
 		# Add to module
-		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."settings_moduls` WHERE `module`='".$plugin_table."'"))>0) {
-					echo "<div class='alert alert-warning'>$str Entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."settings_moduls` WHERE `module`='".$plugin_table1."'"))>0) {
+					echo "<div class='alert alert-warning'>$str1 Entry already exists <br />";
+					echo "$str1 Eintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_module1)) { 
-					echo "<div class='alert alert-success'>$str added to the Module <br />";
-					echo "$str wurde in Module hinzugef&uuml;gt <br /></div>";
+					echo "<div class='alert alert-success'>$str1 added to the Module <br />";
+					echo "$str1 wurde in Module hinzugef&uuml;gt <br /></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Module failed <br />";
 					echo "Zur Module hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str1 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -395,20 +431,20 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 		
 		# Add to module
 		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."settings_moduls` WHERE `module`='".$navi_link2."'"))>0) {
-					echo "<div class='alert alert-warning'>$str Entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "<div class='alert alert-warning'>$str2 Entry already exists <br />";
+					echo "$str2 Eintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_module2)) { 
-					echo "<div class='alert alert-success'>$str added to the Module <br />";
-					echo "$str wurde in Module hinzugef&uuml;gt <br /></div>";
+					echo "<div class='alert alert-success'>$str2 added to the Module <br />";
+					echo "$str2 wurde in Module hinzugef&uuml;gt <br /></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Module failed <br />";
 					echo "Zur Module hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str2 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
@@ -417,26 +453,25 @@ if(!ispageadmin($userID)) { echo ("Access denied!"); return false; }
 
 		# Add to module
 		if(mysqli_num_rows(safe_query("SELECT * FROM `".PREFIX."settings_moduls` WHERE `module`='".$navi_link3."'"))>0) {
-					echo "<div class='alert alert-warning'>$str Entry already exists <br />";
-					echo "$str Eintrag schon vorhanden <br /></div>";
+					echo "<div class='alert alert-warning'>$str3 Entry already exists <br />";
+					echo "$str3 Eintrag schon vorhanden <br /></div>";
 					
 		} else {
 			try {
 				if(safe_query($add_module3)) { 
-					echo "<div class='alert alert-success'>$str added to the Module <br />";
-					echo "$str wurde in Module hinzugef&uuml;gt <br /></div>";
+					echo "<div class='alert alert-success'>$str3 added to the Module <br />";
+					echo "$str3 wurde in Module hinzugef&uuml;gt <br /></div>";
 				} else {
 					echo "<div class='alert alert-danger'>Add to Module failed <br />";
 					echo "Zur Module hinzuf&uuml;gen fehlgeschlagen<br /></div>";
 				}	
 			} CATCH (EXCEPTION $x) {
-					echo "<div class='alert alert-danger'>$str installation failed <br />";
+					echo "<div class='alert alert-danger'>$str3 installation failed <br />";
 					echo "Send the following line to the support team:<br /><br />";
 					echo "<pre>".$x->message()."</pre>		
 						  </div>";
 			}
 		}
-
 
 		echo "</div></div>";
 	

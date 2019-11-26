@@ -69,6 +69,12 @@ $language_array = array(
     'add_to_message'=>'Zur Nachricht hinzufügen',
     'upload'=>'Hochladen',
     'title' => 'Neuigkeiten',
+    'comments'=>'Kommentare',
+    'no_comments' => 'Kommentare deaktivieren',
+    'user_comments' => 'Benutzer-Kommentare aktivieren',
+    'visitor_comments' => 'Besucher-Kommentare aktivieren',
+    'options'=>'Optionen',
+    'publication_setting' => 'Veröffentlichung Einstellung',
     'description' => 'Beschreibung / Info',
     'info'=> '<div class="alert alert-warning" role="alert"><b>Sprachanwendung:</b><br>
 In dem Text muss ein entsprechender Sprach-Tag hinterlegt werden, was wie folgt aussieht.<br>{[de]} Überschrift und Text in deutscher Sprache.<br>

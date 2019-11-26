@@ -1,5 +1,3 @@
-<script src="js/bbcode.js"></script>
-<script src="../includes/plugins/news/js/news.js"></script>
 <?php
 /*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
 | _    _  ___  ___  ___  ___  ___  __    __      ___   __  __       |
@@ -31,16 +29,22 @@
 \__________________________________________________________________*/
 # Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
-$_lang = $pm->plugin_language("admin_news", $plugin_path);
+$plugin_language = $pm->plugin_language("admin_news", $plugin_path);
+
+// -- COMMENTS INFORMATION -- //
+include_once('./includes/plugins/news/news_functions.php');
+#print_r($_SERVER['DOCUMENT_ROOT']);
 
 $_language->readModule('admin_news', false, true);
 
-$title = $_lang[ 'title' ]; 
+$ergebnis = safe_query("SELECT * FROM ".PREFIX."navigation_dashboard_links WHERE modulname='news'");
+    while ($db=mysqli_fetch_array($ergebnis)) {
+      $accesslevel = 'is'.$db['accesslevel'].'admin';
 
-if (!ispageadmin($userID) || mb_substr(basename($_SERVER[ 'REQUEST_URI' ]), 0, 15) != "admincenter.php") {
-    die($_lang[ 'access_denied' ]);
+if (!$accesslevel($userID) || mb_substr(basename($_SERVER[ 'REQUEST_URI' ]), 0, 15) != "admincenter.php") {
+    die($plugin_language[ 'access_denied' ]);
 }
-
+}
 
 $filepath = $plugin_path."images/news-pic/";
 
@@ -186,6 +190,8 @@ $CAPCLASS = new \webspell\Captcha;
         $window2 = 0;
     }
 
+    $comments = $_POST[ 'comments' ];
+
     $date = strtotime($_POST['date']);
     
 
@@ -205,7 +211,8 @@ $CAPCLASS = new \webspell\Captcha;
                     `link2`='" . $link2 . "',
                     `url2`='" . $url2 . "',
                     `window2`='" . $window2 . "',
-                    `displayed` = '" . $displayed . "'
+                    `displayed`= '" . $displayed . "',
+                    `comments`='" . $comments . "'
                 WHERE `newsID` = '" . $_POST[ "newsID" ] . "'"
             );
 
@@ -229,7 +236,7 @@ $CAPCLASS = new \webspell\Captcha;
         }
         safe_query("DELETE FROM " . PREFIX . "plugins_news WHERE newsID='" . $_GET[ 'newsID' ] . "'");
     } else {
-        echo $_lang[ 'transaction_invalid' ];
+        echo $plugin_language[ 'transaction_invalid' ];
     }
 
     
@@ -279,6 +286,8 @@ $CAPCLASS = new \webspell\Captcha;
         $rubric = 0;
     }
 
+    $comments = $_POST[ 'comments' ];
+
 $CAPCLASS = new \webspell\Captcha;
     if ($CAPCLASS->checkCaptcha(0, $_POST[ 'captcha_hash' ])) {
         safe_query(
@@ -295,7 +304,8 @@ $CAPCLASS = new \webspell\Captcha;
                     `link2`,
                     `url2`,
                     `window2`,
-                    `displayed`
+                    `displayed`,
+                    `comments`
                 )
                 VALUES (
                     '" . $rubric . "',
@@ -309,7 +319,8 @@ $CAPCLASS = new \webspell\Captcha;
                     '" . $link2 . "',
                     '" . $url2 . "',
                     '" . $window2 . "',
-                    '" . $displayed . "'
+                    '" . $displayed . "',
+                    '" . $comments . "'
                 )"
         );
 
@@ -410,7 +421,9 @@ if ($action == "add") {
     $window1 = '<input class="input" name="window1" type="checkbox" value="1">';
     $window2 = '<input class="input" name="window2" type="checkbox" value="1">';
 
-
+    $comments = '<option value="0">' . $plugin_language[ 'no_comments' ] . '</option><option value="1">' .
+        $plugin_language[ 'user_comments' ] . '</option><option value="2" selected="selected">' .
+        $plugin_language[ 'visitor_comments' ] . '</option>';
 
 
 echo '<script>
@@ -421,18 +434,23 @@ echo '<script>
         }
     </script>';
 
-  echo'<div class="panel panel-default">
-  <div class="panel-heading">
-                            <i class="fa fa-globe"></i> ' . $_lang['news'] . '
+  echo'<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news'] . '
                         </div>
-    <div class="panel-body">
-  <a href="admincenter.php?site=admin_news">'.$_lang['news'].'</a> &raquo; '.$_lang['new_post'].'<br><br>';
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'news' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">'.$plugin_language['new_post'].'</li>
+                </ol>
+            </nav> 
+    <div class="card-body">';
 
 echo'    <form class="form-horizontal" method="post" id="post" name="post" action="admincenter.php?site=admin_news" onsubmit="return chkFormular();" enctype="multipart/form-data">
 
   
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['rubric'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['rubric'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
       '.$rubriccats.'
     </div>
@@ -442,14 +460,14 @@ echo'    <form class="form-horizontal" method="post" id="post" name="post" actio
 
 
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['banner'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['banner'].':</label>
     <div class="col-sm-3">
       <input name="screen" class="btn btn-info" type="file" id="imgInp" size="40" /> 
       <small>(max. 1000x500)</small>
     </div>
     <div class="col-sm-2">
-      <img id="img-upload" src="../includes/plugins/clanwars/images/no-image.jpg" height="150px"/>
+      <img id="img-upload" src="../includes/plugins/news/images/news-pic/no-image.jpg" height="150px"/>
     </div>
   </div>
 ';
@@ -459,8 +477,8 @@ echo'<hr>';
 echo '
 <!-- =============================  screen Ende =========================================================== -->
 
- <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['link'].' 1:</label>
+ <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['link'].' 1:</label>
     <div class="col-sm-3">
       <input class="form-control" name="link1" type="text">
     </div>
@@ -468,12 +486,12 @@ echo '
       <input class="form-control" name="url1" type="text" placeholder="http://">
       </div>
       <div class="col-sm-2">
-      '.$window1.' '.$_lang['new_window'].'
+      '.$window1.' '.$plugin_language['new_window'].'
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['link'].' 2:</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['link'].' 2:</label>
     <div class="col-sm-3">
       <input class="form-control" name="link2" type="text">
     </div>
@@ -481,34 +499,43 @@ echo '
       <input class="form-control" name="url2" type="text" placeholder="http://">
       </div>
       <div class="col-sm-2">
-      '.$window2.' '.$_lang['new_window'].'
+      '.$window2.' '.$plugin_language['new_window'].'
     </div>
   </div>
    
 <hr>
-'.$_lang['info'].'
-<div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['headline'].':</label>
+'.$plugin_language['info'].'
+<div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['headline'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
       <input class="form-control" type="text" class="form-control" name="headline" size="60" required/></em></span>
     </div>
   </div>
-<div class="form-group">
-   <label class="col-sm-2 control-label">'.$_lang['text'].':</label>
+<div class="form-group row">
+   <label class="col-sm-2 control-label">'.$plugin_language['text'].':</label>
     <div class="col-sm-8">
       <textarea name="message" id="ckeditor" cols="30" rows="15" class="ckeditor"></textarea>
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['is_displayed'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['is_displayed'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
       <input type="checkbox" name="displayed" value="1" checked="checked" /></em></span>
     </div>
   </div>
-  <div class="form-group">
+
+<div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['comments'].':</label>
+    <div class="col-sm-8">
+      <select name="comments">'.$comments.'</select>
+      </div>
+  </div>
+
+
+  <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
     <input type="hidden" name="captcha_hash" value="'.$hash.'" />
-    <button class="btn btn-success" type="submit" name="save"  />'.$_lang['save_news'].'</button>
+    <button class="btn btn-success" type="submit" name="save"  />'.$plugin_language['save_news'].'</button>
     </div>
   </div>
 
@@ -575,6 +602,16 @@ if ($ds[ 'displayed' ] == 1) {
         $window2 = '<input class="input" name="window2" type="checkbox" value="1">';
     }
 
+    $comments = '<option value="0">' . $plugin_language[ 'no_comments' ] . '</option><option value="1">' .
+        $plugin_language[ 'user_comments' ] . '</option><option value="2">' .
+        $plugin_language[ 'visitor_comments' ] . '</option>';
+    $comments =
+        str_replace(
+            'value="' . $ds[ 'comments' ] . '"',
+            'value="' . $ds[ 'comments' ] . '" selected="selected"',
+            $comments
+        );
+
 
     $date = date("Y-m-d", $ds[ 'date' ]);
 
@@ -596,19 +633,24 @@ if ($ds[ 'displayed' ] == 1) {
         }
     </script>';
 
-  echo'<div class="panel panel-default">
-  <div class="panel-heading">
-                            <i class="fa fa-globe"></i> ' . $_lang['news'] . '
+  echo'<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news'] . '
                         </div>
-    <div class="panel-body">
-  <a href="admincenter.php?site=admin_news">'.$_lang['news'].'</a> &raquo; '.$_lang['edit_news'].'<br><br>';
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'news' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">'.$plugin_language['edit_news'].'</li>
+                </ol>
+            </nav> 
+    <div class="card-body">';
 
 	echo'<form class="form-horizontal" method="post" id="post" name="post" action="admincenter.php?site=admin_news&action=edit&newsID=' . $newsID.'"" onsubmit="return chkFormular();" enctype="multipart/form-data">
 
 
   <input type="hidden" name="newsID" value="'.$ds['newsID'].'" />
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['rubric'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['rubric'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
       '.$rubriccats.'
     </div>
@@ -618,8 +660,8 @@ if ($ds[ 'displayed' ] == 1) {
 <!-- ================================ screen Anfang======================================================== -->
 
 
-<div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['banner'].':</label>
+<div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['banner'].':</label>
     <div class="col-sm-2"><span class="text-muted small"><em>
       <input class="btn btn-default" type="file" id="imgInp" name="screen"> <small>(max. 1000x500)</small>
         </em></span>
@@ -629,7 +671,7 @@ if ($ds[ 'displayed' ] == 1) {
       <img id="img-upload" src="../includes/plugins/news/images/news-pic/no-image.jpg" height="150px"/>
     </div>
 
-    <div class="col-sm-2"><input class="btn btn-success" type="submit" name="submit" value="' . $_lang[ 'upload' ] . '"></div>
+    <div class="col-sm-2"><input class="btn btn-success" type="submit" name="submit" value="' . $plugin_language[ 'upload' ] . '"></div>
   </div>
 ';
             
@@ -646,8 +688,8 @@ if ($ds[ 'displayed' ] == 1) {
 
 echo'
 
-<div class="form-group">
-<label class="col-sm-2 control-label">'.$_lang['current_banner'].':</label>
+<div class="form-group row">
+<label class="col-sm-2 control-label">'.$plugin_language['current_banner'].':</label>
     <div class="col-sm-1">
     <a href="../' . $filepath . $screen . '" target="_blank"><img class="img-responsive" style="height="150px" src="../' . $filepath . $screen . '" alt="" /></a>
 </div><div class="col-sm-9">' . $screen . '<br>
@@ -655,14 +697,14 @@ echo'
                 value="../' . $filepath . $screen . '">
 
                 <!--<input class="btn btn-success" type="button" onclick="AddCodeFromWindow(\'[img]' . $filepath . $db[ 'screens' ] . '[/img] \')"
-                    value="' . $_lang[ 'add_to_message' ] . '">-->
+                    value="' . $plugin_language[ 'add_to_message' ] . '">-->
 
                 
 
                 <input class="hidden-xs hidden-sm btn btn-danger" type="button" onclick="MM_confirm(
-                        \'' . $_lang[ 'delete' ] . '\',
+                        \'' . $plugin_language[ 'delete' ] . '\',
                         \'admincenter.php?site=admin_news&amp;action=picdelete&amp;newsID=' . $newsID . '&amp;file=' . basename($screen) . '\'
-                    )" value="' . $_lang[ 'delete' ] . '">
+                    )" value="' . $plugin_language[ 'delete' ] . '">
 
                     
         </div>
@@ -681,8 +723,8 @@ echo '
 <!-- =============================  screen Ende =========================================================== -->
 
 
-<div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['link'].' 1:</label>
+<div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['link'].' 1:</label>
     <div class="col-sm-3">
       <input class="form-control" name="link1" type="text" value="'.getinput($ds['link1']).'">
     </div>
@@ -690,12 +732,12 @@ echo '
       <input class="form-control" name="url1" type="text" value="'.getinput($ds['url1']).'" placeholder="http://">
       </div>
       <div class="col-sm-2">
-      '.$window1.' '.$_lang['new_window'].'
+      '.$window1.' '.$plugin_language['new_window'].'
     </div>
   </div>
 
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['link'].' 2:</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['link'].' 2:</label>
     <div class="col-sm-3">
       <input class="form-control" name="link2" type="text" value="'.getinput($ds['link2']).'">
     </div>
@@ -703,42 +745,49 @@ echo '
       <input class="form-control" name="url2" type="text" value="'.getinput($ds['url2']).'" placeholder="http://">
       </div>
       <div class="col-sm-2">
-      '.$window2.' '.$_lang['new_window'].'
+      '.$window2.' '.$plugin_language['new_window'].'
     </div>
   </div>
    
 <hr>
- '.$_lang['info'].'
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['headline'].':</label>
+ '.$plugin_language['info'].'
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['headline'].':</label>
     <div class="col-sm-8">
       <input class="form-control" type="text" name="headline" maxlength="255" size="5" value="'.getinput($ds['headline']).'" />
     </div>
   </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['text'].':</label>
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['text'].':</label>
     <div class="col-sm-8">
        <textarea name="message" id="ckeditor" cols="30" rows="15" class="ckeditor">'. getinput($ds[ 'content' ]) .' </textarea>
     </div>
   </div>
 
-  <div class="form-group">
-        <label for="bday" class="col-sm-2 control-label">Veröffentlichung Einstellung:</label>
+  <div class="form-group row">
+        <label for="bday" class="col-sm-2 control-label">'.$plugin_language['publication_setting'].':</label>
             <div class="col-lg-2">
             <input name="date" type="date" value="'.$date.'" placeholder="yyyy-mm-dd" class="form-control">
         </div>
     </div>
 
-   <div class="form-group">
-    <label class="col-sm-2 control-label">'.$_lang['is_displayed'].':</label>
+   <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['is_displayed'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
     '.$displayed.'</em></span>
     </div>
   </div>
-  <div class="form-group">
+
+  <div class="form-group row">
+    <label class="col-sm-2 control-label">'.$plugin_language['comments'].':</label>
+    <div class="col-sm-8">
+      <select name="comments">'.$comments.'</select>
+      </div>
+  </div>
+  <div class="form-group row">
     <div class="col-sm-offset-2 col-sm-10">
     <input type="hidden" name="captcha_hash" value="'.$hash.'" /><input type="hidden" name="newsID" value="'.$newsID.'" />
-    <button class="btn btn-success" type="submit" name="saveedit"  />'.$_lang['save_news'].'</button>
+    <button class="btn btn-warning" type="submit" name="saveedit"  />'.$plugin_language['save_news'].'</button>
 
 		
     </div>
@@ -778,65 +827,26 @@ echo '
 if(isset($_GET['page'])) $page=(int)$_GET['page'];
   else $page = 1;
 
-    echo'<div class="panel panel-default">
-    <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> ' . $_lang['news'] . '
+    echo'<div class="card">
+  <div class="card-header">
+                            <i class="fas fa-newspaper"></i> ' . $plugin_language['news'] . '
                         </div>
-    <div class="panel-body">';
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="admincenter.php?site=admin_news">' . $plugin_language[ 'news' ] . '</a></li>
+                <li class="breadcrumb-item active" aria-current="page">New / Edit</li>
+                </ol>
+            </nav> 
+    <div class="card-body">';
 	
-    echo'<div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white">' . $_lang[ 'title' ] .
-    '</a> &raquo; New / Edit</div>
-<div class="col-md-2 form-group">
-        <!-- The modal beginning -->
-        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#flipFlop">' . $_lang[ 'description' ] . '</button>
-
-<!-- The modal -->
-<div class="modal fade" id="flipFlop" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-<div class="modal-header">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-<span aria-hidden="true">&times;</span>
-</button>
-<h4 class="modal-title" id="modalLabel">' . $_lang[ 'description' ] . '</h4>
-</div>
-<div class="modal-body">' . $_lang[ 'privacy_policy_title' ] . '' . $_lang[ 'privacy_policy_text' ] . '';
-    
-      $query = safe_query("SELECT pluginID FROM `".PREFIX."plugins` WHERE `name` ='$title'");
-      $data_array = mysqli_fetch_array($query);
-      if($data_array) { 
-        
-        
-
-        echo '<img src="../images/languages/en.gif" /> Copy the following lines and paste this into your index.php on the position you want. <br />
-          <img src="../images/languages/de.gif" /> Kopiere die folgenden Zeilen und f&uuml;ge Sie in der index.php an der gew&uuml;nschten Stelle ein.<br />
-          <pre>
-          <right>
-&lt;?php
-  $plugin = new plugin_manager();
-  $plugin->set_debug(DEBUG);
-  echo $plugin->plugin_sc('.$data_array['pluginID'].');
-?&gt;         </right>
-          </pre>';
-      }
-
-echo'</div>
-<div class="modal-footer">
-<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-</div>
-</div>
-</div>
-</div>
-<!-- The modal end-->
-</div>
-
-
-<div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news_categorys" class="btn btn-primary" type="button">' . $_lang[ 'news_rubrics' ] . '</a> <a href="admincenter.php?site=admin_news&amp;action=add" class="btn btn-primary" type="button">' . $_lang[ 'new_post' ] . '</a>
-</div>
-<div class="col-md-2 form-group"><a href="admincenter.php?site=admin_news_settings" class="btn btn-primary" type="button">' . $_lang[ 'settings' ] . '</a>
-
-</div>
-';
+    echo'<div class="form-group row">
+    <label class="col-md-1 control-label">' . $plugin_language['options'] . ':</label>
+    <div class="col-md-8">
+      <a href="admincenter.php?site=admin_news_categorys" class="btn btn-primary" type="button">' . $plugin_language[ 'news_rubrics' ] . '</a>
+      <a href="admincenter.php?site=admin_news&amp;action=add" class="btn btn-primary" type="button">' . $plugin_language[ 'new_post' ] . '</a>
+      <a href="admincenter.php?site=admin_news_settings" class="btn btn-primary" type="button">' . $plugin_language[ 'settings' ] . '</a>
+    </div>
+  </div>';
 
         $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dx = mysqli_fetch_array($settings);
@@ -881,13 +891,13 @@ echo'</div>
 
     
 
-     echo'   <table class="table table-striped">
+     echo'<table class="table table-striped">
     <thead>
-      <th><b>' . $_lang['date'] . '</b></th>
-      <th><b>' . $_lang['rubric'] . '</b></th>
-      <th><b>' . $_lang['headline'] . '</b></th>
-      <th><b>' . $_lang['is_displayed'] . '</b></th>
-      <th><b>' . $_lang['actions'] . '</b></th>
+      <th><b>' . $plugin_language['date'] . '</b></th>
+      <th><b>' . $plugin_language['rubric'] . '</b></th>
+      <th><b>' . $plugin_language['headline'] . '</b></th>
+      <th><b>' . $plugin_language['is_displayed'] . '</b></th>
+      <th><b>' . $plugin_language['actions'] . '</b></th>
     </thead>';
 
 $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news` ORDER BY `date`");
@@ -900,37 +910,27 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news` ORDER BY `date`");
             $CAPCLASS->createTransaction();
             $hash = $CAPCLASS->getHash();
         
-        $rubrikname = getrubricname($db[ 'rubric' ]);
-        $rubric = cleartext($db['rubric']);
-        $headline = htmloutput($db['headline']);
+        $rubrikname = getnewsrubricname($db[ 'rubric' ]);
+        $rubric = $db['rubric'];
         $date = getformatdatetime($db[ 'date' ]);
 
-        $translate = new multiLanguage(detectCurrentLanguage());
-
-        $translate->detectLanguages($headline);
-        $headline = $translate->getTextByLanguage($headline);
-
-        $headline = toggle(htmloutput($headline), 1);
-            $headline = toggle($headline, 1);
-
             $db[ 'displayed' ] == 1 ?
-            $displayed = '<font color="green"><b>' . $_lang[ 'yes' ] . '</b></font>' :
-            $displayed = '<font color="red"><b>' . $_lang[ 'no' ] . '</b></font>';
+            $displayed = '<font color="green"><b>' . $plugin_language[ 'yes' ] . '</b></font>' :
+            $displayed = '<font color="red"><b>' . $plugin_language[ 'no' ] . '</b></font>';
             
             
 
         echo '<tr>
         <td>'.$date.'</td>
         <td>'.$rubrikname.'</td>
-        <td>'.$headline.'</td>
+        <td>'.$db['headline'].'</td>
         <td>'.$displayed.'</td>
         
-        <td><a href="admincenter.php?site=admin_news&amp;action=edit&amp;newsID='.$db['newsID'].'" class="hidden-xs hidden-sm btn btn-warning" type="button">' . $_lang[ 'edit' ] . '</a>
+        <td><a href="admincenter.php?site=admin_news&amp;action=edit&amp;newsID='.$db['newsID'].'" class="btn btn-warning" type="button">' . $plugin_language[ 'edit' ] . '</a>
 
-        <input class="hidden-xs hidden-sm btn btn-danger" type="button" onclick="MM_confirm(\''.$_lang['really_delete'].'\', \'admincenter.php?site=admin_news&amp;delete=true&amp;newsID='.$db['newsID'].'&amp;captcha_hash='.$hash.'\')" value="'.$_lang['delete'].'" />
-		
-        <a href="admincenter.php?site=admin_news&amp;action=edit&amp;newsID='.$db['newsID'].'"  class="mobile visible-xs visible-sm" type="button"><i class="fa fa-pencil"></i></a>
-        <a class="mobile visible-xs visible-sm" type="button" onclick="MM_confirm(\''.$_lang['really_delete'].'\', \'admincenter.php?site=admin_news&amp;delete=true&amp;newsID='.$db['newsID'].'&amp;captcha_hash='.$hash.'\')" value="'.$_lang['delete'].'" /><i class="fa fa-times"></i></a></td>
+        <input class="btn btn-danger" type="button" onclick="MM_confirm(\''.$plugin_language['really_delete'].'\', \'admincenter.php?site=admin_news&amp;delete=true&amp;newsID='.$db['newsID'].'&amp;captcha_hash='.$hash.'\')" value="'.$plugin_language['delete'].'" />
+
+        </td>
       </tr>';
       
       

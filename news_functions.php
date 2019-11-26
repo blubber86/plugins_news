@@ -28,27 +28,74 @@
 |                       webspell-rm.de                              |
 \__________________________________________________________________*/
 
-$language_array = Array(
+function getanznewscomments($id, $type)
+{
+    return mysqli_num_rows(
+        safe_query(
+            "SELECT commentID FROM `" . PREFIX . "plugins_news_comments` WHERE `parentID` = " . (int)$id . " AND type='$type'"
+        )
+    );
+}
 
-/* do not edit above this line */
+function getlastnewscommentposter($id, $type)
+{
+    $ds = mysqli_fetch_array(
+        safe_query(
+            "SELECT
+                `userID`,
+                `nickname`
+            FROM
+                `" . PREFIX . "plugins_news_comments`
+            WHERE
+                `parentID` = " . (int)$id . " AND
+                `type` = '$type'
+            ORDER BY
+                `date` DESC
+            LIMIT 0,1"
+        )
+    );
+    if ($ds['userID']) {
+        return getnickname($ds['userID']);
+    }
 
-  'title' => 'Neuigkeiten',
-  'access_denied'=>'Zugriff verweigert',
-  'actions'=>'Aktionen',
-  'add_rubric'=>'Rubrik hinzufügen',
-  'back'=>'zurück',
-  'delete'=>'löschen',
-  'edit'=>'ändern',
-  'edit_rubric'=>'Rubrik ändern',
-  'format_incorrect'=>'Das Format des Banners ist falsch. Bitte lade nur Banner im *.gif, *.jpg oder *.png Format hoch.',
-  'information_incomplete'=>'Angaben unvollständig.',
-  'new_rubric'=>'neue Rubrik',
-  'news_rubrics'=>'Neuigkeiten Rubriken',
-  'picture'=>'Bild',
-  'picture_upload'=>'Bild Upload',
-  'really_delete'=>'Diese Rubrik wirklich löschen?',
-  'rubric_name'=>'Rubrik Name',
-  'options'=>'Optionen',
-  'transaction_invalid'=>'Transaktions ID ungültig'
-);
+    return htmlspecialchars($ds['nickname']);
+}
 
+function getlastnewscommentdate($id, $type)
+{
+    $ds = mysqli_fetch_array(
+        safe_query(
+            "SELECT
+                `date`
+            FROM
+                `" . PREFIX . "plugins_news_comments`
+            WHERE
+                `parentID` = " . (int)$id . " AND
+                `type` = '$type'
+            ORDER BY
+                `date` DESC
+            LIMIT 0,1"
+        )
+    );
+    return $ds['date'];
+}
+
+function getnewsrubricname($rubricID)
+{
+    $ds = mysqli_fetch_array(
+        safe_query(
+            "SELECT rubric FROM `" . PREFIX . "plugins_news_rubrics` WHERE `rubricID` = " . (int)$rubricID
+        )
+    );
+    return $ds['rubric'];
+}
+
+function getnewsrubricpic($rubricID)
+{
+    $ds = mysqli_fetch_array(
+        safe_query(
+            "SELECT pic FROM `" . PREFIX . "plugins_news_rubrics` WHERE `rubricID` = " . (int)$rubricID
+        )
+    );
+    return $ds['pic'];
+}

@@ -1,0 +1,11 @@
+{"plugin":
+	{
+		"info":
+		{
+			"name":"News",
+			"folder":"news",
+			"modulname":"news"
+		},
+		"widgets":["widget_news_functions.php"]
+	}
+}
