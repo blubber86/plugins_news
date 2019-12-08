@@ -35,7 +35,7 @@
 include_once("news_functions.php");
 
     $data_array = array();
-    $data_array['$title']=$plugin_language['title'];
+    $data_array['$headlines-title']=$plugin_language['headlines-title'];
     $template = $GLOBALS["_template"]->loadTemplate("sc_headlines","head", $data_array, $plugin_path);
     echo $template;
 
@@ -60,11 +60,11 @@ $ergebnis = safe_query(
         *
     FROM
         " . PREFIX . "plugins_news ORDER BY
-        date DESC
+        date 
     LIMIT 0," . $maxheadlines
 );
 if (mysqli_num_rows($ergebnis)) {
-   # echo '<div class="container"><ul class="nav">';
+    #echo '<div class="container"><ul class="nav">';
     $n = 1;
     while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
@@ -90,9 +90,6 @@ if (mysqli_num_rows($ergebnis)) {
         $headline = $ds['headline'];
         $headline = $headline;
 
-        $line = '<b class="text-primary">' . $headline . '</b>&nbsp;&nbsp;<a href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '" class="btn btn-primary">READMORE</a>';
-        
-
         $rubrikname = getnewsrubricname($ds[ 'rubric' ]);
         $rubrikname_link = getinput($rubrikname);
         $rubricpic_name = getnewsrubricpic($ds[ 'rubric' ]);
@@ -101,20 +98,23 @@ if (mysqli_num_rows($ergebnis)) {
         if (!file_exists($rubricpic) || $rubricpic_name == '') {
             $rubricpic = '';
         } else {
-            $rubricpic = '<img src="' . $rubricpic . '" alt=""  style="width: 660px" class="i1mg-fluid">';
+            $rubricpic = '<img src="' . $rubricpic . '" alt="" class="img-fluid">';
             }
+
+        $line1 = '<a class="p-1 badge badge-primary rounded-0" href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '" >READMORE</a>';
+        $line = '' . $headline . '';
 
         $data_array = array();
         $data_array['$date'] = $date;
         $data_array['$time'] = $time;
         $data_array['$news_id'] = $news_id;
         $data_array['$line'] = $line;
+        $data_array['$line1'] = $line1;
         $data_array['$headline'] = $headline;
         $data_array['$rubricpic'] = $rubricpic;
 
         $template = $GLOBALS["_template"]->loadTemplate("sc_headlines","content", $data_array, $plugin_path);
         echo $template;
-
         $n++;
     }
     #echo '</ul></div>';

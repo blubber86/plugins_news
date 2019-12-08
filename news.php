@@ -85,6 +85,8 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
     if ($anzcats) {
 
 #$ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
+        $template = $GLOBALS["_template"]->loadTemplate("news","content_area_head", $data_array, $plugin_path);
+        echo $template;
     
    $n=1;
 
@@ -186,7 +188,16 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $content .= '<b class="text-primary">[...]</b><br><a href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '" class="btn btn-primary">READMORE</a>';
         }
 
+        if ($dx[ 'switchen' ] == "b") {
+            $switchen = 12;
+        } elseif ($dx[ 'switchen' ] == "s") {
+            $switchen =  6;
+        } else {
+            $switchen = 4;
+        }
+
         $data_array = array();
+        $data_array['$switchen'] = $switchen;
         $data_array['$related'] = $related;
         $data_array['$headline'] = $headline;
         $data_array['$rubrikname'] = $rubrikname;
@@ -195,12 +206,16 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $data_array['$poster'] = $poster;
         $data_array['$date'] = $date;
         $data_array['$comments'] = $comments;
+
+        #if($data_array['$switchen'] == "0") { $data_array['number'] = "invisible"; } else { $data_array['number1'] = "visible"; }
         
         $template = $GLOBALS["_template"]->loadTemplate("news","content_area", $data_array, $plugin_path);
         echo $template;
         $n++;
         unset($comments);
        }
+       $template = $GLOBALS["_template"]->loadTemplate("news","content_area_foot", $data_array, $plugin_path);
+        echo $template;
        } else {
         echo $_lang[ 'no_news' ];
     }
