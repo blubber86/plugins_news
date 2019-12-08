@@ -166,14 +166,12 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                         </div>
 
                         <div class="row bt">
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 '.$plugin_language['news_position'].':
                             </div>
 
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <select id="switchen" name="switchen" class="form-control">'.$switchen.'</select>
-                                </div>
+                            <div class="col-md-5">
+                                <select id="switchen" name="switchen" class="form-control">'.$switchen.'</select>
                             </div>
                         </div>
 
