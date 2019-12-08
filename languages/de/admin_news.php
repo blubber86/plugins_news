@@ -75,23 +75,14 @@ $language_array = array(
     'visitor_comments' => 'Besucher-Kommentare aktivieren',
     'options'=>'Optionen',
     'publication_setting' => 'Veröffentlichung Einstellung',
-    'description' => 'Beschreibung / Info',
+    'big' => 'News untereinander',
+    'small'  => 'News nebeneinander',
+    'unknown' => 'Standard',
+    'news_position' => 'News Position',
     'info'=> '<div class="alert alert-warning" role="alert"><b>Sprachanwendung:</b><br>
 In dem Text muss ein entsprechender Sprach-Tag hinterlegt werden, was wie folgt aussieht.<br>{[de]} Überschrift und Text in deutscher Sprache.<br>
 {[en]} Heading and text in English.</div>',
-    'privacy_policy_title' => '<h3>Installation vom Clan Rules Plugin</h3><p>Eine Aufstellung aller Einträge und verwendeten Dateien.</p><br>',
-    'privacy_policy_text' => '<h4>Datenbank erstellt:</h4>
-  <p>_plugins_clan_rules</p>
-  <h4>Dateien:</h4>
-<p><u>PHP:</u><br>
-/_plugins/clan_rules/admin/admin_clan_rules.php<br>
-/_plugins/clan_rules/clan_rules.php<br>
-<u>Languages:</u><br>
-/_plugins/clan_rules/language/de/clan_rules.php,<br>
-/_plugins/clan_rules/language/en/clan_rules.php,<br>
-<u>html:</u><br>
-/_plugins/clan_rules/templates/clan_rules.html<br>
-<br></p>',
+    
 
   'tooltip_1'=>'Dies ist die URL der Seite, z.B. (deinedomain.de/pfad/webspell).<br>Ohne http:// am Anfang und nicht mit Slash enden!<br>Sollte etwas sein wie',
   'tooltip_2'=>'Das ist der Titel der Seite, wird auch als Browser Titel angezeigt',

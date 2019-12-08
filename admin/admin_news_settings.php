@@ -31,7 +31,7 @@
 $pm = new plugin_manager(); 
 $plugin_language = $pm->plugin_language("admin_news", $plugin_path);
 
-$_language->readModule('admin_news', false, true);
+#$_language->readModule('admin_news', false, true);
 
 $ergebnis = safe_query("SELECT * FROM ".PREFIX."navigation_dashboard_links WHERE modulname='news_settings'");
     while ($db=mysqli_fetch_array($ergebnis)) {
@@ -57,7 +57,8 @@ if (isset($_POST[ 'submit' ])) {
                 newschars='" . $_POST[ 'newschars' ] . "',
                 headlineschars='" . $_POST[ 'headlineschars' ] . "',
                 topnewschars='" . $_POST[ 'topnewschars' ] . "',
-                feedback='" . $_POST[ 'feedback' ] . "' "
+                feedback='" . $_POST[ 'feedback' ] . "',
+                switchen='" . $_POST[ 'switchen' ] . "' "
         );
         
         redirect("admincenter.php?site=admin_news_settings", "", 0);
@@ -98,8 +99,12 @@ if (empty($maxfeedback)) {
     $maxfeedback = 5;
 }  
     
-    
-    
+#$switchen = $ds['switchen']    
+            $switchen = '<option value="b">' . $plugin_language['big'] . '</option>
+                         <option value="s">' . $plugin_language['small'] . '</option>
+                         <option value="u">' . $plugin_language['unknown'] . '</option>';
+            $switchen =
+                str_replace('value="' . $ds['switchen'] . '"', 'value="' . $ds['switchen'] . '" selected="selected"', $switchen);    
 
     
 
@@ -108,55 +113,67 @@ if (empty($maxfeedback)) {
     $CAPCLASS = new \webspell\Captcha;
     $CAPCLASS->createTransaction();
     $hash = $CAPCLASS->getHash();
-    ?>
-    <form method="post" action="admincenter.php?site=admin_news_settings">
+    
+echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
         <div class="card">
             <div class="card-header">
-                <?php echo $plugin_language[ 'settings' ]; ?>
+                '.$plugin_language[ 'settings' ].'
             </div>
 
             <div class="card-body">
-                <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white"><?php echo $plugin_language['title']; ?></a> &raquo; <a href="admincenter.php?site=admin_news_settings" class="white"><?php echo $plugin_language['settings']; ?></a> &raquo; Edit</div>
+                <div class="col-md-10 form-group"><a href="admincenter.php?site=admin_news" class="white">'.$plugin_language['title'].'</a> &raquo; <a href="admincenter.php?site=admin_news_settings" class="white">'.$plugin_language['settings'].'</a> &raquo; Edit</div>
 <div class="col-md-2 form-group"></div><br><br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['max_admin']; ?>:
+                                '.$plugin_language['max_admin'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_2' ]; ?>"><input class="form-control" name="admin_news" type="text" value="<?php echo getinput($ds[ 'admin_news' ]); ?>" size="35"></em></span>
-                            </div>
-                        </div>
-
-                        <div class="row bt">
-                            <div class="col-md-6">
-                                <?php echo $plugin_language['max_news']; ?>:
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_3' ]; ?>"><input class="form-control" type="text" name="news" value="<?php echo getinput($ds['news']); ?>" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_2' ].'"><input class="form-control" name="admin_news" type="text" value="'.$ds[ 'admin_news' ].'" size="35"></em></span>
                             </div>
                         </div>
 
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['max_archiv']; ?>:
+                                '.$plugin_language['max_news'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_5' ]; ?>"><input class="form-control" type="text" name="newsarchiv" value="<?php echo getinput($ds['newsarchiv']); ?>" size="35" ></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_3' ].'"><input class="form-control" type="text" name="news" value="'.$ds['news'].'" size="35"></em></span>
                             </div>
                         </div>
 
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['max_headlines']; ?>:
+                                '.$plugin_language['max_archiv'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_1' ]; ?>"><input class="form-control" type="text" name="headlines" value="<?php echo getinput($ds['headlines']); ?>" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_5' ].'"><input class="form-control" type="text" name="newsarchiv" value="'.$ds['newsarchiv'].'" size="35" ></em></span>
+                            </div>
+                        </div>
+
+                        <div class="row bt">
+                            <div class="col-md-6">
+                                '.$plugin_language['max_headlines'].':
+                            </div>
+
+                            <div class="col-md-6">
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_1' ].'"><input class="form-control" type="text" name="headlines" value="'.$ds['headlines'].'" size="35"></em></span>
+                            </div>
+                        </div>
+
+                        <div class="row bt">
+                            <div class="col-md-6">
+                                '.$plugin_language['news_position'].':
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select id="switchen" name="switchen" class="form-control">'.$switchen.'</select>
+                                </div>
                             </div>
                         </div>
 
@@ -166,49 +183,49 @@ if (empty($maxfeedback)) {
                     <div class="col-md-6">
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['max_length_news']; ?>:
+                                '.$plugin_language['max_length_news'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_4' ]; ?>"><input class="form-control" type="text" name="newschars" value="<?php echo getinput($ds['newschars']); ?>" size="35"></em></span>
-                            </div>
-                        </div>
-
-                        <div class="row bt">
-                            <div class="col-md-6">
-                                <?php echo $plugin_language['max_length_headlines']; ?>:
-                            </div>
-
-                            <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_4' ]; ?>"><input class="form-control" type="text" name="headlineschars" value="<?php echo getinput($ds['headlineschars']); ?>" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_4' ].'"><input class="form-control" type="text" name="newschars" value="'.$ds['newschars'].'" size="35"></em></span>
                             </div>
                         </div>
 
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['max_length_topnews']; ?>:
+                                '.$plugin_language['max_length_headlines'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_6' ]; ?>"><input class="form-control" type="text" name="topnewschars" value="<?php echo getinput($ds['topnewschars']); ?>" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_4' ].'"><input class="form-control" type="text" name="headlineschars" value="'.$ds['headlineschars'].'" size="35"></em></span>
                             </div>
                         </div>
 
                         <div class="row bt">
                             <div class="col-md-6">
-                                <?php echo $plugin_language['comments']; ?>:
+                                '.$plugin_language['max_length_topnews'].':
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="<?php echo $plugin_language[ 'tooltip_26' ]; ?>"><input class="form-control" type="text" name="feedback" value="<?php echo $ds['feedback']; ?>" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_6' ].'"><input class="form-control" type="text" name="topnewschars" value="'.$ds['topnewschars'].'" size="35"></em></span>
+                            </div>
+                        </div>
+
+                        <div class="row bt">
+                            <div class="col-md-6">
+                                '.$plugin_language['comments'].':
+                            </div>
+
+                            <div class="col-md-6">
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_26' ].'"><input class="form-control" type="text" name="feedback" value="'.$ds['feedback'].'" size="35"></em></span>
                             </div>
                         </div>
                     </div>
                </div>
                 <br>
  <div class="form-group">
-<input type="hidden" name="captcha_hash" value="<?php echo $hash; ?>"> 
-<button class="btn btn-primary" type="submit" name="submit"><?php echo $plugin_language['update']; ?></button>
+<input type="hidden" name="captcha_hash" value="'.$hash.'"> 
+<button class="btn btn-primary" type="submit" name="submit">'.$plugin_language['update'].'</button>
 </div>
 
         
@@ -217,8 +234,8 @@ if (empty($maxfeedback)) {
             </div>
        
         
-    </form>
-<?php
+    </form>';
+
 }
 ?>
 
