@@ -193,7 +193,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         } elseif ($dx[ 'switchen' ] == "s") {
             $switchen =  6;
         } else {
-            $switchen = 4;
+            $switchen = 12;
         }
 
         $data_array = array();

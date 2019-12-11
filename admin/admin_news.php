@@ -504,7 +504,7 @@ echo '
   </div>
    
 <hr>
-'.$plugin_language['info'].'
+
 <div class="form-group row">
     <label class="col-sm-2 control-label">'.$plugin_language['headline'].':</label>
     <div class="col-sm-8"><span class="text-muted small"><em>
@@ -750,7 +750,7 @@ echo '
   </div>
    
 <hr>
- '.$plugin_language['info'].'
+ 
   <div class="form-group row">
     <label class="col-sm-2 control-label">'.$plugin_language['headline'].':</label>
     <div class="col-sm-8">

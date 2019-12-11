@@ -107,6 +107,7 @@ $installc = "CREATE TABLE `" . PREFIX . "plugins_news_settings` (
   `headlineschars` int(11) NOT NULL DEFAULT '0',
   `topnewschars` int(11) NOT NULL DEFAULT '0',
   `feedback` int(11) NOT NULL DEFAULT '0',
+  `switchen` char(1) NOT NULL DEFAULT 'u',
   PRIMARY KEY (`newssetID`)
 ) AUTO_INCREMENT=1
   DEFAULT CHARSET=utf8 DEFAULT COLLATE utf8_unicode_ci";  

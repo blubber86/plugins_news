@@ -41,7 +41,9 @@ $language_array = array(
     'comments' => '<a href="$url">[$anzcomments] comments</a>, latest by $lastposter - $lastdate',
     'no_comment' => '<a href="$url">no comments</a>',
     'no_comments' => 'disable comments',
-    'off_comments' => 'Comments disabled'
+    'off_comments' => 'Comments disabled',
+    'no_news' => '<blockquote>no news available!</blockquote>',
+    'headlines-title' => 'News Feed'
 
 
 );

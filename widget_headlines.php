@@ -64,7 +64,7 @@ $ergebnis = safe_query(
     LIMIT 0," . $maxheadlines
 );
 if (mysqli_num_rows($ergebnis)) {
-    #echo '<div class="container"><ul class="nav">';
+    
     $n = 1;
     while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
@@ -117,7 +117,7 @@ if (mysqli_num_rows($ergebnis)) {
         echo $template;
         $n++;
     }
-    #echo '</ul></div>';
+    
     unset($rubricID);
 }
         $data_array = array();

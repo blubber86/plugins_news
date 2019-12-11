@@ -42,6 +42,7 @@ $language_array = array(
     'no_comment' => '<a href="$url">keine Kommentare</a>',
     'no_comments' => 'Kommentare deaktivieren',
     'off_comments' => 'Kommentare deaktiviert',
+    'no_news' => '<blockquote>keine News vorhanden!</blockquote>',
     'headlines-title' => 'News Feed'
 
 

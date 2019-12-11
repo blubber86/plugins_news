@@ -131,7 +131,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_2' ].'"><input class="form-control" name="admin_news" type="text" value="'.$ds[ 'admin_news' ].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_1' ].'"><input class="form-control" name="admin_news" type="text" value="'.$ds[ 'admin_news' ].'" size="35"></em></span>
                             </div>
                         </div>
 
@@ -141,7 +141,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_3' ].'"><input class="form-control" type="text" name="news" value="'.$ds['news'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_2' ].'"><input class="form-control" type="text" name="news" value="'.$ds['news'].'" size="35"></em></span>
                             </div>
                         </div>
 
@@ -151,7 +151,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_5' ].'"><input class="form-control" type="text" name="newsarchiv" value="'.$ds['newsarchiv'].'" size="35" ></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_3' ].'"><input class="form-control" type="text" name="newsarchiv" value="'.$ds['newsarchiv'].'" size="35" ></em></span>
                             </div>
                         </div>
 
@@ -161,17 +161,19 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_1' ].'"><input class="form-control" type="text" name="headlines" value="'.$ds['headlines'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_4' ].'"><input class="form-control" type="text" name="headlines" value="'.$ds['headlines'].'" size="35"></em></span>
                             </div>
                         </div>
 
                         <div class="row bt">
-                            <div class="col-md-7">
+                            <div class="col-md-6">
                                 '.$plugin_language['news_position'].':
                             </div>
 
-                            <div class="col-md-5">
-                                <select id="switchen" name="switchen" class="form-control">'.$switchen.'</select>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <select id="switchen" name="switchen" class="form-control">'.$switchen.'</select>
+                                </div>
                             </div>
                         </div>
 
@@ -185,7 +187,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_4' ].'"><input class="form-control" type="text" name="newschars" value="'.$ds['newschars'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_5' ].'"><input class="form-control" type="text" name="newschars" value="'.$ds['newschars'].'" size="35"></em></span>
                             </div>
                         </div>
 
@@ -195,7 +197,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_4' ].'"><input class="form-control" type="text" name="headlineschars" value="'.$ds['headlineschars'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_6' ].'"><input class="form-control" type="text" name="headlineschars" value="'.$ds['headlineschars'].'" size="35"></em></span>
                             </div>
                         </div>
 
@@ -205,7 +207,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_6' ].'"><input class="form-control" type="text" name="topnewschars" value="'.$ds['topnewschars'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_7' ].'"><input class="form-control" type="text" name="topnewschars" value="'.$ds['topnewschars'].'" size="35"></em></span>
                             </div>
                         </div>
 
@@ -215,7 +217,7 @@ echo'    <form method="post" action="admincenter.php?site=admin_news_settings">
                             </div>
 
                             <div class="col-md-6">
-                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_26' ].'"><input class="form-control" type="text" name="feedback" value="'.$ds['feedback'].'" size="35"></em></span>
+                                <span class="pull-right text-muted small"><em data-toggle="tooltip" title="'.$plugin_language[ 'tooltip_8' ].'"><input class="form-control" type="text" name="feedback" value="'.$ds['feedback'].'" size="35"></em></span>
                             </div>
                         </div>
                     </div>
