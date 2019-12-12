@@ -1,29 +1,32 @@
 <?php
-/*
-##########################################################################
-#                                                                        #
-#           Version 4       /                        /   /               #
-#          -----------__---/__---__------__----__---/---/-               #
-#           | /| /  /___) /   ) (_ `   /   ) /___) /   /                 #
-#          _|/_|/__(___ _(___/_(__)___/___/_(___ _/___/___               #
-#                       Free Content / Management System                 #
-#                                   /                                    #
-#                                                                        #
-#                                                                        #
-#   Copyright 2005-2015 by webspell.org                                  #
-#                                                                        #
-#   visit webSPELL.org, webspell.info to get webSPELL for free           #
-#   - Script runs under the GNU GENERAL PUBLIC LICENSE                   #
-#   - It's NOT allowed to remove this copyright-tag                      #
-#   -- http://www.fsf.org/licensing/licenses/gpl.html                    #
-#                                                                        #
-#   Code based on WebSPELL Clanpackage (Michael Gruber - webspell.at),   #
-#   Far Development by Development Team - webspell.org                   #
-#                                                                        #
-#   visit webspell.org                                                   #
-#                                                                        #
-##########################################################################
-*/
+/*¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯\
+| _    _  ___  ___  ___  ___  ___  __    __      ___   __  __       |
+|( \/\/ )(  _)(  ,)/ __)(  ,\(  _)(  )  (  )    (  ,) (  \/  )      |
+| \    /  ) _) ) ,\\__ \ ) _/ ) _) )(__  )(__    )  \  )    (       |
+|  \/\/  (___)(___/(___/(_)  (___)(____)(____)  (_)\_)(_/\/\_)      |
+|                       ___          ___                            |
+|                      |__ \        / _ \                           |
+|                         ) |      | | | |                          |
+|                        / /       | | | |                          |
+|                       / /_   _   | |_| |                          |
+|                      |____| (_)   \___/                           |
+\___________________________________________________________________/
+/                                                                   \
+|        Copyright 2005-2018 by webspell.org / webspell.info        |
+|        Copyright 2018-2019 by webspell-rm.de                      |
+|                                                                   |
+|        - Script runs under the GNU GENERAL PUBLIC LICENCE         |
+|        - It's NOT allowed to remove this copyright-tag            |
+|        - http://www.fsf.org/licensing/licenses/gpl.html           |
+|                                                                   |
+|               Code based on WebSPELL Clanpackage                  |
+|                 (Michael Gruber - webspell.at)                    |
+\___________________________________________________________________/
+/                                                                   \
+|                     WEBSPELL RM Version 2.0                       |
+|           For Support, Mods and the Full Script visit             |
+|                       webspell-rm.de                              |
+\__________________________________________________________________*/
 # Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
 $_lang = $pm->plugin_language("comments", $plugin_path);
@@ -105,6 +108,38 @@ if (isset($_POST[ 'savevisitorcomment' ])) {
             );
         
         unset($_SESSION[ 'comments_message' ]);
+//neu IM bei neuen comments von einem Gast ///////////////////////////////////////
+
+//$dt = safe_query("SELECT userID FROM " . PREFIX . "user WHERE pmoncomment='1'");
+
+$dt = safe_query("SELECT userID FROM " . PREFIX . "user_groups WHERE page='1'");
+ 
+while ($ds = mysqli_fetch_array($dt)) {
+$touser[] = $ds[ 'userID' ];
+ }  
+ 
+ 
+if ($userID) {
+$name = getnickname($userID, $id);
+} else { $name = 'Ein Gast' ; }
+ 
+    $msgfrom= array();
+    $msgfrom[ 'ne' ] = "zu einer News";
+    if (isset($msgfrom[$_POST['type']])) {
+        $_message_from = $msgfrom[$_POST['type']];
+    } else {
+        $_message_from = "unknown";
+    }
+ 
+ 
+foreach($touser as $id) {
+ 
+$message = 'Hallo '.getnickname($id).',<br>' . $name . ' hat gerade ein Kommentar ' . $_message_from . ' gepostet.<br><a href="' . $_POST[ 'referer' ] . '"><i>Klicke Hier um zu dem Eintrag zu gelangen.</i></a>';
+ 
+sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
+;}
+
+//ende /////////////////////////////////////////////////////////////////////  
         header("Location: " . $_POST[ 'referer' ]);
     }
 } elseif (isset($_POST[ 'saveusercomment' ])) {
@@ -137,7 +172,38 @@ if (isset($_POST[ 'savevisitorcomment' ])) {
                         '" . $message . "'
                     )"
             );
-   
+//neu IM bei neuen comments von reg.member ///////////////////////////////////////
+
+//$dt = safe_query("SELECT userID FROM " . PREFIX . "user WHERE pmoncomment='1'");
+
+$dt = safe_query("SELECT userID FROM " . PREFIX . "user_groups WHERE page='1'");
+ 
+while ($ds = mysqli_fetch_array($dt)) {
+$touser[] = $ds[ 'userID' ];
+ }  
+ 
+ 
+if ($userID) {
+$name = getnickname($userID, $id);
+} else { $name = 'Ein Gast' ; }
+ 
+    $msgfrom= array();
+    $msgfrom[ 'ne' ] = "zu einer News";
+    if (isset($msgfrom[$_POST['type']])) {
+        $_message_from = $msgfrom[$_POST['type']];
+    } else {
+        $_message_from = "unknown";
+    }
+ 
+ 
+foreach($touser as $id) {
+ 
+$message = 'Hallo '.getnickname($id).',<br>' . $name . ' hat gerade ein Kommentar ' . $_message_from . ' gepostet.<br><a href="' . $_POST[ 'referer' ] . '"><i>Klicke Hier um zu dem Eintrag zu gelangen.</i></a>';
+ 
+sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
+;}
+
+//ende /////////////////////////////////////////////////////////////////////     
     header("Location: " . $_POST[ 'referer' ]);
 } elseif (isset($_GET[ 'delete' ])) {
     $_language->readModule('comments');
