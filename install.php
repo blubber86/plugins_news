@@ -9,7 +9,7 @@ function goBack() {
 $modulname1	 	= 	"news"; 									// name to uninstall
 $plugin_table1 	= 	"news"; 									// name of the mysql table
 $str1			=	"News"; 									// name of the plugin
-$navi_name1		=	"{[de]}Neuigkeiten{[en]}News";				// name of the Navi
+$navi_name1		=	"{[de]}Neuigkeiten{[en]}News{[it]}Notizie";				// name of the Navi
 $description1	=	"Mit diesem Plugin könnt ihr eure news anzeigen lassen."; 	// description of the plugin
 $admin_file1 	=	"admin_news";								// administration file
 $activate1 		=	"1";										// plugin activate 1 yes | 0 no
