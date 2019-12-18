@@ -69,6 +69,10 @@ $language_array = array(
     'add_to_message'=>'add to message',
     'upload'=>'upload',
     'title' => 'News',
+    'comments'=>'Comments',
+    'no_comments' => 'deactivate Comments',
+    'user_comments' => 'activate User-Comments',
+    'visitor_comments' => 'activate Visitor-Comments',
     'options'=>'Options',
     'publication_setting' => 'Publication setting',
     'big' => 'News among each other',
@@ -84,6 +88,7 @@ $language_array = array(
     'tooltip_6'=>'Maximum length for the latest news in widget_headlines',
     'tooltip_7'=>'Maximum length for the top news in sc_topnews',
     'tooltip_8'=>'Comments per page'
+	
 );
  
 
