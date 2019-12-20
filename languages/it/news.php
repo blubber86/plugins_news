@@ -43,6 +43,7 @@ $language_array = array(
     'no_comment' => '<a href="$url">Nessun Commento</a>',
     'no_comments' => 'Disabilitare i commenti',
 	'no_news' => 'Nessuna Notizia',
+	'headlines-title' => 'Feed Notizie',
     'off_comments' => 'Commenti disattivati'
 
 
