@@ -47,7 +47,7 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
   $gesamt = mysqli_num_rows($alle);
   $pages=1;
 
-  #=========
+  
   $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
         $dn = mysqli_fetch_array($settings);
 
@@ -57,10 +57,6 @@ if(isset($_GET['page'])) $page=(int)$_GET['page'];
         $max = 10;
         }
  
-        
-  #=========      
-
-  #$max='1';
 
   for ($n=$max; $n<=$gesamt; $n+=$max) {
     if($gesamt>$n) $pages++;
@@ -84,7 +80,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
     $anzcats = mysqli_num_rows($ds);
     if ($anzcats) {
 
-#$ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
+
         $template = $GLOBALS["_template"]->loadTemplate("news","content_area_head", $data_array, $plugin_path);
         echo $template;
     
@@ -133,9 +129,6 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
             $comments = $_lang[ 'off_comments' ];
         }
 
-        #$n = 1;
-        
-                
         $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'poster' ] . '">
             <strong>' . getnickname($ds[ 'poster' ]) . '</strong>
         </a>';
@@ -188,16 +181,7 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $content .= '<b class="text-primary">[...]</b><br><a href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '" class="btn btn-primary">READMORE</a>';
         }
 
-        if ($dx[ 'switchen' ] == "b") {
-            $switchen = 12;
-        } elseif ($dx[ 'switchen' ] == "s") {
-            $switchen =  6;
-        } else {
-            $switchen = 12;
-        }
-
         $data_array = array();
-        $data_array['$switchen'] = $switchen;
         $data_array['$related'] = $related;
         $data_array['$headline'] = $headline;
         $data_array['$rubrikname'] = $rubrikname;
@@ -207,8 +191,6 @@ $ds = safe_query("SELECT * FROM `" . PREFIX . "plugins_news`  ORDER BY `date`");
         $data_array['$date'] = $date;
         $data_array['$comments'] = $comments;
 
-        #if($data_array['$switchen'] == "0") { $data_array['number'] = "invisible"; } else { $data_array['number1'] = "visible"; }
-        
         $template = $GLOBALS["_template"]->loadTemplate("news","content_area", $data_array, $plugin_path);
         echo $template;
         $n++;

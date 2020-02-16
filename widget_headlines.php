@@ -32,7 +32,7 @@
     $plugin_language = $pm->plugin_language("news", $plugin_path);
 
     // -- COMMENTS INFORMATION -- //
-include_once("news_functions.php");
+#include_once("news_functions.php");
 
     $data_array = array();
     $data_array['$headlines-title']=$plugin_language['headlines-title'];
@@ -64,7 +64,7 @@ $ergebnis = safe_query(
     LIMIT 0," . $maxheadlines
 );
 if (mysqli_num_rows($ergebnis)) {
-    
+    #echo '<div class="container"><ul class="nav">';
     $n = 1;
     while ($ds = mysqli_fetch_array($ergebnis)) {
         $date = getformatdate($ds[ 'date' ]);
@@ -86,9 +86,24 @@ if (mysqli_num_rows($ergebnis)) {
                 'message' => $qs[ 'content' ],
             );
         }
-        
+
         $headline = $ds['headline'];
         $headline = $headline;
+
+        $settings = safe_query("SELECT * FROM " . PREFIX . "plugins_news_settings");
+        $dx = mysqli_fetch_array($settings);
+
+      
+        if (empty($maxheadlinechars)) {
+        $maxheadlinechars = $dx[ 'headlineschars' ];
+        }
+
+        if (mb_strlen($headline) > $maxheadlinechars) {
+            $headline = mb_substr($headline, 0, $maxheadlinechars);
+            $headline .= '...';
+        }
+        
+        
 
         $rubrikname = getnewsrubricname($ds[ 'rubric' ]);
         $rubrikname_link = getinput($rubrikname);
@@ -102,13 +117,11 @@ if (mysqli_num_rows($ergebnis)) {
             }
 
         $line1 = '<a class="p-1 badge badge-primary rounded-0" href="index.php?site=news_contents&amp;newsID=' . $ds[ 'newsID' ] . '" >READMORE</a>';
-        $line = '' . $headline . '';
-
+       
         $data_array = array();
         $data_array['$date'] = $date;
         $data_array['$time'] = $time;
         $data_array['$news_id'] = $news_id;
-        $data_array['$line'] = $line;
         $data_array['$line1'] = $line1;
         $data_array['$headline'] = $headline;
         $data_array['$rubricpic'] = $rubricpic;
@@ -117,7 +130,7 @@ if (mysqli_num_rows($ergebnis)) {
         echo $template;
         $n++;
     }
-    
+    #echo '</ul></div>';
     unset($rubricID);
 }
         $data_array = array();

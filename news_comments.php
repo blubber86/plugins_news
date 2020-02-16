@@ -29,13 +29,22 @@
 \__________________________________________________________________*/
 # Sprachdateien aus dem Plugin-Ordner laden
 $pm = new plugin_manager(); 
-$_lang = $pm->plugin_language("comments", $plugin_path);
+$plugin_language = $pm->plugin_language("comments", $plugin_path);
+
+try {
+    $get = mysqli_fetch_assoc(safe_query("SELECT * FROM `".PREFIX."settings_recaptcha`"));
+    $webkey = $get['webkey'];
+    $seckey = $get['seckey'];
+    if ($get['activated']=="1") { $recaptcha=1; } else { $recaptcha=0; }
+} Catch (EXCEPTION $e) {
+    $recaptcha=0;
+}
 
 function checkCommentsAllow($type, $parentID)
 {
 global $userID;
     $moduls = array();
-    $moduls['ne'] = array("news","newsID","comments");
+    $moduls['ne'] = array("plugins_news","newsID","comments");
     $allowed = 0;
     $modul = $moduls[$type];
     $get = safe_query("SELECT ".$modul[2]." FROM ".PREFIX.$modul[0]." WHERE ".$modul[1]."='".$parentID."'");
@@ -44,7 +53,7 @@ global $userID;
         switch($data[$modul[2]]){
             case 0: $allowed = 0; break;
             case 1: if($userID) $allowed = 1; break;
-            case 2: $allowed = 1; break;
+            case 2: $allowed = 2; break;
             default: $allowed=0;
         }
     }
@@ -53,45 +62,79 @@ global $userID;
 
  
 if (isset($_POST[ 'savevisitorcomment' ])) {
-    
     $name = $_POST[ 'name' ];
     $mail = $_POST[ 'mail' ];
-    $url = $_POST[ 'url' ];
-    $parentID = (int)$_POST[ 'parentID' ];
+    $homepage = $_POST[ 'homepage' ];
+    $parentID = $_POST[ 'parentID' ];
     $type = $_POST[ 'type' ];
     $message = $_POST[ 'message' ];
-    $ip = $GLOBALS[ 'ip' ];
-    $CAPCLASS = new \webspell\Captcha();
  
-    $nicks = array();
+    $date = time();
+    
+    $CAPCLASS = new \webspell\Captcha;
+    $captcha = $CAPCLASS->createCaptcha();
+    $hash = $CAPCLASS->getHash();
+    $CAPCLASS->clearOldCaptcha();
  
-    setcookie("visitor_info", $name . "--||--" . $mail . "--||--" . $url, time() + (3600 * 24 * 365));
-    $query = safe_query("SELECT `nickname`, `username` FROM `" . PREFIX . "user` ORDER BY `nickname`");
-    while ($ds = mysqli_fetch_array($query)) {
-        $nicks[] = $ds[ 'nickname' ];
-        $nicks[] = $ds[ 'username' ];
+    
+        if($recaptcha!=1) {
+            $CAPCLASS = new \webspell\Captcha;
+            if (!$CAPCLASS->checkCaptcha($_POST['captcha'], $_POST['captcha_hash'])) {
+                $fehler[] = "Securitycode Error";
+                $runregister = "false";
+            } else {
+                $run = 1;
+                $runregister = "true";
+            }
+        } else {
+            $runregister = "false";
+            if($_SERVER["REQUEST_METHOD"] == "POST") {
+                $recaptcha=$_POST['g-recaptcha-response'];
+                if(!empty($recaptcha)) {
+                    include("./system/curl_recaptcha.php");
+                    $google_url="https://www.google.com/recaptcha/api/siteverify";
+                    $secret=$seckey;
+                    $ip=$_SERVER['REMOTE_ADDR'];
+                    $url=$google_url."?secret=".$secret."&response=".$recaptcha."&remoteip=".$ip;
+                    $res=getCurlData($url);
+                    $res= json_decode($res, true);
+                    //reCaptcha success check 
+                    if($res['success'])     {
+                    $runregister="true"; $run=1;
+                    }       else        {
+                        $fehler[] = "reCAPTCHA Error";
+                        $runregister="false";
+                    }
+                } else {
+                    $fehler[] = "reCAPTCHA Error";
+                    $runregister="false";
+                }
+            }
+        }
+   
+ 
+   if (mysqli_num_rows(safe_query("SELECT * FROM " . PREFIX . "user WHERE nickname = '$name' "))) {
+            $name = '*' . $name . '*';
+        }
+        $name = $name;
     }
-    $_SESSION[ 'comments_message' ] = $message;
- 
-    $spamApi = webspell\SpamApi::getInstance();
-    $validation = $spamApi->validate($message);
- 
-    if (in_array(trim($name), $nicks)) {
-        header("Location: " . $_POST[ 'referer' ] . "&error=nickname#post");
-    } elseif (!($CAPCLASS->checkCaptcha($_POST[ 'captcha' ], $_POST[ 'captcha_hash' ]))) {
-        header("Location: " . $_POST[ 'referer' ] . "&error=captcha#post");
-    } elseif (checkCommentsAllow($type, $parentID) === false) {
-        header("Location: " . $_POST[ 'referer' ]);
-    } else {
+   if (!empty($name) && !empty($message)) {
         $date = time();
+        $ip = $GLOBALS[ 'ip' ];
+        $ergebnis = safe_query("SELECT * FROM " . PREFIX . "plugins_news_comments ORDER BY date DESC LIMIT 0,1");
+        $ds = mysqli_fetch_array($ergebnis);
+        if (($ds[ 'message' ] != $message) ||
+            ($ds[ 'name' ] != $name)
+        ) {
+        
         safe_query(
                 "INSERT INTO `" . PREFIX . "plugins_news_comments` (
                     `parentID`,
                     `type`,
                     `nickname`,
                     `date`,
-                    `comment`,
-                    `url`,
+                    `comments`,
+                    `homepage`,
                     `email`,
                     `ip`
                 )
@@ -101,13 +144,13 @@ if (isset($_POST[ 'savevisitorcomment' ])) {
                     '" . $name . "',
                     '" . $date . "',
                     '" . $message . "',
-                    '" . $url . "',
+                    '" . $homepage . "',
                     '" . $mail . "',
                     '" . $ip . "'
                 )"
             );
         
-        unset($_SESSION[ 'comments_message' ]);
+       
 //neu IM bei neuen comments von einem Gast ///////////////////////////////////////
 
 //$dt = safe_query("SELECT userID FROM " . PREFIX . "user WHERE pmoncomment='1'");
@@ -144,9 +187,9 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
     }
 } elseif (isset($_POST[ 'saveusercomment' ])) {
     
-    $_language->readModule('comments');
+    #
     if (!$userID) {
-        die($_language->module[ 'access_denied' ]);
+        die($plugin_language[ 'access_denied' ]);
     }
  
     $parentID = $_POST[ 'parentID' ];
@@ -162,7 +205,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                         `type`,
                         `userID`,
                         `date`,
-                        `comment`
+                        `comments`
                     )
                     VALUES (
                         '" . $parentID . "',
@@ -206,9 +249,9 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
 //ende /////////////////////////////////////////////////////////////////////     
     header("Location: " . $_POST[ 'referer' ]);
 } elseif (isset($_GET[ 'delete' ])) {
-    $_language->readModule('comments');
+    
     if (!isanyadmin($userID)) {
-        die($_lang[ 'access_denied' ]);
+        die($plugin_language[ 'access_denied' ]);
     }
 
     foreach ($_POST[ 'commentID' ] as $id) {
@@ -218,7 +261,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
 } elseif (isset($_GET[ 'editcomment' ])) {
     $id = $_GET[ 'id' ];
     $referer = $_GET[ 'ref' ];
-    $_language->readModule('comments');
+    
     
     if (isfeedbackadmin($userID) || iscommentposter($userID, $id)) {
         if (!empty($id)) {
@@ -227,7 +270,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 $ds = mysqli_fetch_array($dt);
                 $poster = '<a href="index.php?site=profile&amp;id=' . $ds[ 'userID' ] . '"><b>' .
                     getnickname($ds[ 'userID' ]) . '</b></a>';
-                $message = getinput($ds[ 'comment' ]);
+                $message = getinput($ds[ 'comments' ]);
                 $message = preg_replace("#\n\[br\]\[br\]\[hr]\*\*(.+)#si", '', $message);
                 $message = preg_replace("#\n\[br\]\[br\]\*\*(.+)#si", '', $message);
  
@@ -238,19 +281,19 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 $data_array['$referer'] = $referer;
                 $data_array['$userID'] = $userID;
                
-                $data_array['$title_editcomment']=$_lang['title_editcomment'];
-                $data_array['$edit_comment']=$_lang['edit_comment'];    
+                $data_array['$title_editcomment']=$plugin_language['title_editcomment'];
+                $data_array['$edit_comment']=$plugin_language['edit_comment'];    
                 
                 $template = $GLOBALS["_template"]->loadTemplate("comments","edit", $data_array, $plugin_path);
                 echo $template;
             } else {
-                redirect($referer, $_language->module[ 'no_database_entry' ], 2);
+                redirect($referer, $plugin_language[ 'no_database_entry' ], 2);
             }
         } else {
-            redirect($referer, $_language->module[ 'no_commentid' ], 2);
+            redirect($referer, $plugin_language[ 'no_commentid' ], 2);
         }
     } else {
-        redirect($referer, $_language->module[ 'access_denied' ], 2);
+        redirect($referer, $plugin_language[ 'access_denied' ], 2);
     }
 } elseif (isset($_POST[ 'saveeditcomment' ])) {
     
@@ -267,7 +310,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
         "UPDATE
                 `" . PREFIX . "plugins_news_comments`
             SET
-                comment='" . $message . "'
+                comments='" . $message . "'
             WHERE
                 commentID='" . (int)$_POST[ 'commentID' ] . "'"
     )
@@ -275,7 +318,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
         header("Location: " . $referer);
     }
 } else {
-    $_language->readModule('comments');
+    
     
     if (isset($_GET[ 'commentspage' ])) {
         $commentspage = (int)$_GET[ 'commentspage' ];
@@ -367,18 +410,18 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
     }
     if ($gesamt) {
         $data_array = array();
-        $data_array['$comments']=$_lang['comments'];
+        $data_array['$comments']=$plugin_language['comments'];
         $template = $GLOBALS["_template"]->loadTemplate("comments","title", $data_array, $plugin_path);
         echo $template;
  
         if ($sorttype == "ASC") {
             $sorter = '<a href="' . $referer . '&amp;commentspage=' . $commentspage . '&amp;sorttype=DESC">' .
-                $_lang[ 'sort' ] . '</a> <i class="fa fa-chevron-down" title="' .
-                $_lang[ 'sort_desc' ] . '"></span>&nbsp;&nbsp;&nbsp;';
+                $plugin_language[ 'sort' ] . '</a> <i class="fa fa-chevron-down" title="' .
+                $plugin_language[ 'sort_desc' ] . '"></span>&nbsp;&nbsp;&nbsp;';
         } else {
             $sorter = '<a href="' . $referer . '&amp;commentspage=' . $commentspage . '&amp;sorttype=ASC">' .
-                $_lang[ 'sort' ] . '</a> <i class="fa fa-chevron-up" title="' .
-                $_lang[ 'sort_asc' ] . '"></span>&nbsp;&nbsp;&nbsp;';
+                $plugin_language[ 'sort' ] . '</a> <i class="fa fa-chevron-up" title="' .
+                $plugin_language[ 'sort_asc' ] . '"></span>&nbsp;&nbsp;&nbsp;';
         }
  
         $data_array = array();
@@ -396,25 +439,22 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 $poster = '<a class="titlelink" href="index.php?site=profile&amp;id=' . $ds[ 'userID' ] . '"><b>' .
                     strip_tags(getnickname($ds[ 'userID' ])) . '</b></a>';
                 if (isclanmember($ds[ 'userID' ])) {
-                    $member = $_lang[ 'clanmember_icon' ];
+                    $member = $plugin_language[ 'clanmember_icon' ];
                 } else {
                     $member = '';
                 }
  
-                $quotemessage = addslashes(getinput($ds[ 'comment' ]));
+                $quotemessage = addslashes(getinput($ds[ 'comments' ]));
                 $quotemessage = str_replace(array("\r\n", "\r", "\n"), array('\r\n', '\r', '\n'), $quotemessage);
                 $quotenickname = addslashes(getinput(getnickname($ds[ 'userID' ])));
                 $quote = str_replace(
                     array('%nickname%', '%message%'),
                     array($quotenickname, $quotemessage),
-                    $_lang[ 'quote_link' ]
+                    $plugin_language[ 'quote_link' ]
                 );
  
-                #$country = '[flag]' . getcountry($ds[ 'userID' ]) . '[/flag]';
-                #$country = $country;
- 
                 if (($email = getemail($ds[ 'userID' ])) && !getemailhide($ds[ 'userID' ])) {
-                    $email = str_replace('%email%', mail_protect($email), $_lang[ 'email_link' ]);
+                    $email = str_replace('%email%', mail_protect($email), $plugin_language[ 'email_link' ]);
                 } else {
                     $email = '';
                 }
@@ -424,7 +464,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 ) {
                     $hp = '<a href="http://' . $gethomepage .
                         '" target="_blank"><i class="fa fa-home" title="' .
-                        $_lang[ 'homepage' ] . '"></i></a>';
+                        $plugin_language[ 'homepage' ] . '"></i></a>';
                 } else {
                     $hp = '';
                 }
@@ -441,7 +481,7 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 if ($loggedin && $ds[ 'userID' ] != $userID) {
                     $pm = '<a href="index.php?site=messenger&amp;action=touser&amp;touser=' . $ds[ 'userID' ] .
                         '"><i class="fas fa-envelope" title="' .
-                        $_lang[ 'send_message' ] . '"></i></a>';
+                        $plugin_language[ 'send_message' ] . '"></i></a>';
                     
                 } else {
                     $pm = '';
@@ -449,8 +489,8 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 }
             } else {
                 $member = '';
-                $avatar = '<img src="images/avatars/noavatar.gif" class="text-left" alt="Avatar">';
-                #$country = '';
+                $avatar = '<img src="images/avatars/noavatar.png" class="text-left" alt="Avatar">';
+                
                 $pm = '';
                 $statuspic = '';
                 $ds[ 'nickname' ] = strip_tags($ds[ 'nickname' ]);
@@ -460,20 +500,20 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 $ds[ 'email' ] = strip_tags($ds[ 'email' ]);
                 $ds[ 'email' ] = htmlspecialchars($ds[ 'email' ]);
                 if ($ds[ 'email' ]) {
-                    $email = str_replace('%email%', mail_protect($ds[ 'email' ]), $_lang[ 'email_link' ]);
+                    $email = str_replace('%email%', mail_protect($ds[ 'email' ]), $plugin_language[ 'email_link' ]);
                 } else {
                     $email = '';
                 }
  
-                $ds[ 'url' ] = strip_tags($ds[ 'url' ]);
-                $ds[ 'url' ] = htmlspecialchars($ds[ 'url' ]);
-                if (!stristr($ds[ 'url' ], 'http://')) {
-                    $ds[ 'url' ] = "http://" . $ds[ 'url' ];
+                $ds[ 'homepage' ] = strip_tags($ds[ 'homepage' ]);
+                $ds[ 'homepage' ] = htmlspecialchars($ds[ 'homepage' ]);
+                if (!stristr($ds[ 'homepage' ], 'http://')) {
+                    $ds[ 'homepage' ] = "http://" . $ds[ 'homepage' ];
                 }
-                if ($ds[ 'url' ] != "http://" && $ds[ 'url' ] != "") {
-                    $hp = '<a href="' . $ds[ 'url' ] .
+                if ($ds[ 'homepage' ] != "http://" && $ds[ 'homepage' ] != "") {
+                    $hp = '<a href="' . $ds[ 'homepage' ] .
                         '" target="_blank"><i class="fa fa-home" title="' .
-                        $_lang[ 'homepage' ] . '"></i></a>';
+                        $plugin_language[ 'homepage' ] . '"></i></a>';
                 } else {
                     $hp = '';
                 }
@@ -484,22 +524,21 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                     $ip .= 'saved';
                 }
  
-                $quotemessage = addslashes(getinput($ds[ 'comment' ]));
+                $quotemessage = addslashes(getinput($ds[ 'comments' ]));
                 $quotenickname = addslashes(getinput($ds[ 'nickname' ]));
                 $quote = str_replace(
                     array('%nickname%', '%message%'),
                     array($quotenickname, $quotemessage),
-                    $_lang[ 'quote_link' ]
+                    $plugin_language[ 'quote_link' ]
                 );
             }
  
-            $content = $ds[ 'comment' ];
-            $content = $content. $ds[ 'commentID' ];
- 
+            $contents = $ds[ 'comments' ];
+            
             if (isfeedbackadmin($userID) || iscommentposter($userID, $ds[ 'commentID' ])) {
                 $edit =
                     '<a href="index.php?site=news_comments&amp;editcomment=true&amp;id=' . $ds[ 'commentID' ] . '&amp;ref=' .
-                    urlencode($referer) . '" title="' . $_lang[ 'edit_comment' ] .
+                    urlencode($referer) . '" title="' . $plugin_language[ 'edit_comment' ] .
                     '"><i class="fas fa-edit"></i></a>';
             } else {
                 $edit = '';
@@ -512,20 +551,10 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                 $actions = '';
             }
  
-            $spam_buttons = "";
-            if (!empty($spamapikey)) {
-                if (ispageadmin($userID)) {
-                    $spam_buttons =
-                        '<input type="button" value="Spam" onclick="eventfetch(\'ajax_spamfilter.php?commentID=' .
-                        $ds[ 'commentID' ] . '&type=spam\',\'\',\'return\')">
-                        <input type="button" value="Ham" onclick="eventfetch(\'ajax_spamfilter.php?commentID=' .
-                        $ds[ 'commentID' ] . '&type=ham\',\'\',\'return\')">';
-                }
-            }
- 
+             
             $data_array = array();
             $data_array['$avatar'] = $avatar;
-            $data_array['$content'] = $content;
+            $data_array['$contents'] = $contents;
             $data_array['$edit'] = $edit;
             $data_array['$actions'] = $actions;
             $data_array['$poster'] = $poster;
@@ -537,12 +566,10 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
             unset(
                 $member,
                 $quote,
-                #$country,
                 $email,
                 $hp,
                 $avatar,
                 $pm,
-                $buddy,
                 $ip,
                 $edit
             );
@@ -560,8 +587,8 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
                             $hash = $CAPCLASS->getHash();
             $submit = '<input type="hidden" name="referer" value="' . $referer . '">
                     <input class="input" type="checkbox" name="ALL" value="ALL" onclick="SelectAll(this.form);"> ' .
-                    $_lang[ 'select_all' ] . '
-                    <input type="submit" value="' . $_lang[ 'delete_selected' ] . '" class="btn btn-danger">';
+                    $plugin_language[ 'select_all' ] . '
+                    <input type="submit" value="' . $plugin_language[ 'delete_selected' ] . '" class="btn btn-danger">';
         } else {
             $submit = '';
         }
@@ -575,6 +602,15 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
     }
  
     if ($comments_allowed) {
+        try {
+            $get = mysqli_fetch_assoc(safe_query("SELECT * FROM `".PREFIX."settings_recaptcha`"));
+            $webkey = $get['webkey'];
+            $seckey = $get['seckey'];
+            if ($get['activated']=="1") { $recaptcha=1; } else { $recaptcha=0; }
+            } Catch (EXCEPTION $e) {
+                $recaptcha=0;
+            }
+
         if ($loggedin) {
             
             $data_array = array();
@@ -583,34 +619,34 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
             $data_array['$parentID'] = $parentID;
             $data_array['$type'] = $type;
             
-            $data_array['$title_comment']=$_lang['title_comment'];
-            $data_array['$post_comment']=$_lang['post_comment'];
+            $data_array['$title_comment']=$plugin_language['title_comment'];
+            $data_array['$post_comment']=$plugin_language['post_comment'];
             
             $template = $GLOBALS["_template"]->loadTemplate("comments","add_user", $data_array, $plugin_path);
             echo $template;
-
+          
         } elseif ($comments_allowed == 2) {
             if (isset($_COOKIE[ 'visitor_info' ])) {
                 $visitor = explode("--||--", $_COOKIE[ 'visitor_info' ]);
                 $name = getforminput(stripslashes($visitor[ 0 ]));
                 $mail = getforminput(stripslashes($visitor[ 1 ]));
-                $url = getforminput(stripslashes($visitor[ 2 ]));
+                $homepage = getforminput(stripslashes($visitor[ 2 ]));
             } else {
-                $url = "http://";
+                $homepage = "http://";
                 $name = "";
                 $mail = "";
             }
  
-            /*if (isset($_GET[ 'error' ])) {
+            if (isset($_GET[ 'error' ])) {
                 $err = $_GET[ 'error' ];
             } else {
                 $err = "";
             }
             if ($err == "nickname") {
-                $error = $_lang[ 'error_nickname' ];
+                $error = $plugin_language[ 'error_nickname' ];
                 $name = "";
             } elseif ($err == "captcha") {
-                $error = $_lang[ 'error_captcha' ];
+                $error = $plugin_language[ 'error_captcha' ];
             } else {
                 $error = '';
             }
@@ -626,28 +662,50 @@ sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
             $captcha = $CAPCLASS->createCaptcha();
             $hash = $CAPCLASS->getHash();
             $CAPCLASS->clearOldCaptcha();
+
+            if($recaptcha=="0") { 
+                $CAPCLASS = new \webspell\Captcha;
+                $captcha = $CAPCLASS->createCaptcha();
+                $hash = $CAPCLASS->getHash();
+                $CAPCLASS->clearOldCaptcha();
+                $_captcha = '
+                        <span class="input-group-addon captcha-img">'.$captcha.'</span>
+                        <input type="number" name="captcha" class="form-control" id="input-security-code">
+                        <input name="captcha_hash" type="hidden" value="'.$hash.'">
+                    ';
+            } else {
+                $_captcha = '
+                <div class="g-recaptcha" style="width: 70%; float: left;" data-sitekey="'.$webkey.'"></div>';
+            }
  
             $data_array = array();
             $data_array['$name'] = $name;
             $data_array['$mail'] = $mail;
-            $data_array['$url'] = $url;
+            $data_array['$homepage'] = $homepage;
             $data_array['$message'] = $message;
-            $data_array['$captcha'] = $captcha;
+            $data_array['$_captcha'] = $_captcha;
             $data_array['$hash'] = $hash;
             $data_array['$referer'] = $referer;
             $data_array['$parentID'] = $parentID;
-            $data_array['$type'] = $type;*/
+            $data_array['$type'] = $type;
+            $data_array['$visitorip'] = $GLOBALS['ip'];
 
-            $data_array['$no_access']=$_lang['no_access'];
+            $data_array['$title_comment']=$plugin_language['title_comment'];
+            $data_array['$post_comment']=$plugin_language['post_comment'];
+            $data_array['$lang_name']=$plugin_language['name'];
+            $data_array['$lang_mail']=$plugin_language['mail'];
+            $data_array['$no_access']=$plugin_language['no_access'];
+
 
             $template = $GLOBALS["_template"]->loadTemplate("comments","add_visitor", $data_array, $plugin_path);
             echo $template;
             
         } else {
-            echo $_lang[ 'no_access' ];
+            echo $plugin_language[ 'no_access' ];
         }
     } else {
-        echo $_lang[ 'comments_disabled' ];
+        echo $plugin_language[ 'comments_disabled' ];
     }
 
     }
+

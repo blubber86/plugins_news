@@ -20,6 +20,8 @@
 }
 .zoom img {
     transition: all 0.2s linear;
+    height: 100px;
+    width: 100%;
 }
 .zoom:hover img {
     -webkit-transform: scale(1.1);

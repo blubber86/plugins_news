@@ -30,12 +30,10 @@ $language_array = array(
 /* do not edit above this line */
 
     'access_denied' => 'Zugriff verweigert',
-    'add_buddy' => 'zur Freundesliste hinzufügen',
-    'bbcode_on' => '<a href="javascript:void(0);" onclick="window.open(\'code.php\',\'BBCode\',\'scrollbars=yes,width=600,height=500\')">BBCode</a> ist AN',
     'by' => 'von',
     'clanmember_icon' => ' <i class="fas fa-user" aria-hidden="true" title="Clanmember"></i>',
     'comments' => 'Kommentare',
-    'comments_disabled' => '<blockquote><b>Die Kommentarfunktion ist deaktiviert.</b></blockquote>',
+    'comments_disabled' => '<blockquote>Die Kommentarfunktion ist deaktiviert.</blockquote>',
     'delete_selected' => 'Ausgewählte löschen',
     'edit_comment' => 'Kommentar ändern',
     'email_link' => '<a href="mailto:%email%"><i class="fa fa-envelope" title="email"></i></a>',
