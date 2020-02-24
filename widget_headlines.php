@@ -32,7 +32,7 @@
     $plugin_language = $pm->plugin_language("news", $plugin_path);
 
     // -- COMMENTS INFORMATION -- //
-#include_once("news_functions.php");
+    include_once("news_functions.php");
 
     $data_array = array();
     $data_array['$headlines-title']=$plugin_language['headlines-title'];
