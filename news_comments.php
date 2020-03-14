@@ -179,7 +179,7 @@ foreach($touser as $id) {
  
 $message = 'Hallo '.getnickname($id).',<br>' . $name . ' hat gerade ein Kommentar ' . $_message_from . ' gepostet.<br><a href="' . $_POST[ 'referer' ] . '"><i>Klicke Hier um zu dem Eintrag zu gelangen.</i></a>';
  
-sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
+//sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
 ;}
 
 //ende /////////////////////////////////////////////////////////////////////  
@@ -243,7 +243,7 @@ foreach($touser as $id) {
  
 $message = 'Hallo '.getnickname($id).',<br>' . $name . ' hat gerade ein Kommentar ' . $_message_from . ' gepostet.<br><a href="' . $_POST[ 'referer' ] . '"><i>Klicke Hier um zu dem Eintrag zu gelangen.</i></a>';
  
-sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
+//sendmessage($id,'Neuer Kommentar ' . $_message_from . '',$message);
 ;}
 
 //ende /////////////////////////////////////////////////////////////////////     
